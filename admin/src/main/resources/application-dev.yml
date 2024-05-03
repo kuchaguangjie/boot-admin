@@ -1,0 +1,7 @@
+logging:
+  level:
+    org.hibernate.orm.jdbc.bind: trace
+# opentelemetry 配置
+otel:
+  sdk:
+    disabled: true
