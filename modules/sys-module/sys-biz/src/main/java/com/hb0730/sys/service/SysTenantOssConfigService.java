@@ -7,11 +7,14 @@ import com.hb0730.jpa.core.service.BaseService;
 import com.hb0730.sys.domain.dto.OssConfigDto;
 import com.hb0730.sys.domain.entity.SysOssConfig;
 import com.hb0730.sys.repository.SysTenantOssConfigRepository;
+import com.hb0730.sys.service.cache.OssCache;
 import com.hb0730.sys.service.mapstruct.SysOssConfigMapstruct;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.Optional;
 
 /**
  * @author <a href="mailto:huangbing0730@gmail">hb0730</a>
@@ -22,6 +25,7 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class SysTenantOssConfigService extends BaseService<SysTenantOssConfigRepository, SysOssConfig, String> {
     private final SysOssConfigMapstruct mapstruct;
+    private final OssCache ossCache;
 
     /**
      * 根据商户编码查询
@@ -30,7 +34,14 @@ public class SysTenantOssConfigService extends BaseService<SysTenantOssConfigRep
      * @return SysOssConfig
      */
     public OssConfigDto findBySysCode(String sysCode) {
+        Optional<SysOssConfig> ossConfigOptional = ossCache.get(sysCode);
+        if (ossConfigOptional.isPresent()) {
+            return mapstruct.toDto(ossConfigOptional.get());
+        }
         SysOssConfig sysOssConfig = baseRepository.findBySysCode(sysCode);
+        if (null != sysOssConfig) {
+            ossCache.set(sysOssConfig);
+        }
         return mapstruct.toDto(sysOssConfig);
     }
 
@@ -49,5 +60,30 @@ public class SysTenantOssConfigService extends BaseService<SysTenantOssConfigRep
             BeanUtil.copyProperties(sysOssConfig, entity, CopyOptions.create().setIgnoreNullValue(true));
         }
         save(entity);
+        ossCache.set(entity);
+    }
+
+
+    /**
+     * 刷新缓存
+     *
+     * @param sysCode 商户编码,为空则刷新所有
+     */
+    public void refreshCache(String sysCode) {
+        if (StrUtil.isBlank(sysCode)) {
+            _refreshCache();
+        } else {
+            _refreshCache(sysCode);
+        }
+    }
+
+    private void _refreshCache(String sysCode) {
+        SysOssConfig sysOssConfig = baseRepository.findBySysCode(sysCode);
+        ossCache.set(sysOssConfig);
+    }
+
+    private void _refreshCache() {
+        ossCache.clear();
+        baseRepository.findAll().forEach(ossCache::set);
     }
 }

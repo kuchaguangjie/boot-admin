@@ -36,7 +36,7 @@ public interface CacheUtil {
     }
 
     static String buildKeys(KeyValue kv, Object... keys) {
-        return kv.getPrefix() + concatKeys(keys);
+        return concatKeys(kv.getPrefix(), keys);
     }
 
     static String concatKeys(Object... keys) {

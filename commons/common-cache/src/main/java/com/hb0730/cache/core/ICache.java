@@ -2,6 +2,7 @@ package com.hb0730.cache.core;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
@@ -19,7 +20,7 @@ public interface ICache {
      * @param pattern 匹配模式,如: *
      * @return keys
      */
-    Set<String> scanKeys(String pattern);
+    Optional<Set<String>> scanKeys(String pattern);
 
     /**
      * 删除key

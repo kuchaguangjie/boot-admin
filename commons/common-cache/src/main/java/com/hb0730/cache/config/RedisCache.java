@@ -9,15 +9,16 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.redis.core.Cursor;
+import org.springframework.data.redis.core.KeyScanOptions;
 import org.springframework.data.redis.core.RedisCallback;
 import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.data.redis.core.ScanOptions;
 import org.springframework.util.Assert;
 
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
@@ -34,16 +35,19 @@ public class RedisCache implements ICache {
     private final RedisTemplate<String, Object> redisTemplate;
 
     @Override
-    public Set<String> scanKeys(String pattern) {
+    public Optional<Set<String>> scanKeys(String pattern) {
         Set<String> keys = new HashSet<>();
         redisTemplate.execute((RedisCallback<Object>) connection -> {
-            Cursor<byte[]> cursor = connection.scan(ScanOptions.scanOptions().match(pattern).count(1000).build());
-            while (cursor.hasNext()) {
-                keys.add(new String(cursor.next()));
+            try (Cursor<byte[]> cursor = connection.keyCommands().scan(KeyScanOptions.scanOptions().match(pattern).count(1000).build())) {
+                while (cursor.hasNext()) {
+                    keys.add(new String(cursor.next()));
+                }
+            } catch (Exception e) {
+                log.error("scan keys error", e);
             }
             return null;
         });
-        return keys;
+        return Optional.of(keys);
     }
 
     @Override

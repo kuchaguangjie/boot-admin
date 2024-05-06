@@ -7,6 +7,7 @@ import lombok.Setter;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 
 /**
@@ -36,7 +37,7 @@ public class BootAdminCache implements ICache {
     }
 
     @Override
-    public Set<String> scanKeys(String pattern) {
+    public Optional<Set<String>> scanKeys(String pattern) {
         if (StrUtil.isBlank(pattern)) {
             pattern = "*";
         }
