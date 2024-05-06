@@ -9,7 +9,7 @@
  Target Server Version : 80300 (8.3.0)
  File Encoding         : 65001
 
- Date: 01/05/2024 19:48:23
+ Date: 06/05/2024 11:55:44
 */
 
 SET NAMES utf8mb4;
@@ -46,7 +46,7 @@ CREATE TABLE `bas_organization`
     `id`            varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
     `parent_id`     varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci  DEFAULT NULL COMMENT '父类机构ID',
     `name`          varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '机构名称',
-    `product_id`    varchar(32) COLLATE utf8mb4_general_ci                        DEFAULT NULL COMMENT '产品ID',
+    `product_id`    varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci  DEFAULT NULL COMMENT '产品ID',
     `link_man`      varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci  DEFAULT NULL COMMENT '联系人',
     `link_tel`      varchar(30) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci  DEFAULT NULL COMMENT '联系电话',
     `link_email`    varchar(30) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci  DEFAULT NULL COMMENT '联系邮箱',
@@ -87,8 +87,8 @@ COMMIT;
 DROP TABLE IF EXISTS `bas_permission`;
 CREATE TABLE `bas_permission`
 (
-    `id`          varchar(32) COLLATE utf8mb4_general_ci                       NOT NULL,
-    `parent_id`   varchar(32) COLLATE utf8mb4_general_ci                        DEFAULT NULL COMMENT '父类id',
+    `id`          varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+    `parent_id`   varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci  DEFAULT NULL COMMENT '父类id',
     `path`        varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL COMMENT '路由地址',
     `route_name`  varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci  DEFAULT NULL COMMENT '路由名称',
     `redirect`    varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL COMMENT '路由重定向',
@@ -251,7 +251,7 @@ DROP TABLE IF EXISTS `bas_role_permission`;
 CREATE TABLE `bas_role_permission`
 (
     `role_id`       varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '角色ID',
-    `permission_id` varchar(32) COLLATE utf8mb4_general_ci                       NOT NULL COMMENT '权限ID',
+    `permission_id` varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '权限ID',
     PRIMARY KEY (`role_id`, `permission_id`)
 ) ENGINE = InnoDB
   DEFAULT CHARSET = utf8mb4
@@ -360,6 +360,61 @@ CREATE TABLE `bas_user_role`
 BEGIN;
 INSERT INTO `bas_user_role` (`role_id`, `user_id`)
 VALUES ('1785229829160034304', '1785229829181005824');
+COMMIT;
+
+-- ----------------------------
+-- Table structure for sys_dict
+-- ----------------------------
+DROP TABLE IF EXISTS `sys_dict`;
+CREATE TABLE `sys_dict`
+(
+    `id`          varchar(32) COLLATE utf8mb4_general_ci NOT NULL,
+    `name`        varchar(32) COLLATE utf8mb4_general_ci NOT NULL COMMENT '字典名称',
+    `type`        varchar(32) COLLATE utf8mb4_general_ci NOT NULL COMMENT '字典类型',
+    `description` varchar(255) COLLATE utf8mb4_general_ci                      DEFAULT NULL COMMENT '描述',
+    `is_enabled`  tinyint(1)                                                   DEFAULT '1' COMMENT '状态',
+    `created`     datetime                                                     DEFAULT NULL COMMENT '创建时间',
+    `created_by`  varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL COMMENT '创建者',
+    `modified`    datetime                                                     DEFAULT NULL COMMENT '修改时间',
+    `modified_by` varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL COMMENT '修改时间',
+    PRIMARY KEY (`id`)
+) ENGINE = InnoDB
+  DEFAULT CHARSET = utf8mb4
+  COLLATE = utf8mb4_general_ci COMMENT ='管理端：字典';
+
+-- ----------------------------
+-- Records of sys_dict
+-- ----------------------------
+BEGIN;
+COMMIT;
+
+-- ----------------------------
+-- Table structure for sys_dict_item
+-- ----------------------------
+DROP TABLE IF EXISTS `sys_dict_item`;
+CREATE TABLE `sys_dict_item`
+(
+    `id`          varchar(32) COLLATE utf8mb4_general_ci NOT NULL,
+    `dict_id`     varchar(32) COLLATE utf8mb4_general_ci NOT NULL COMMENT '字典ID',
+    `dict_type`   varchar(32) COLLATE utf8mb4_general_ci NOT NULL COMMENT '字典类型',
+    `value`       varchar(32) COLLATE utf8mb4_general_ci NOT NULL COMMENT '字典值',
+    `label`       varchar(32) COLLATE utf8mb4_general_ci NOT NULL COMMENT '标签',
+    `sort`        int                                                          DEFAULT NULL COMMENT '排序',
+    `description` varchar(255) COLLATE utf8mb4_general_ci                      DEFAULT NULL COMMENT '描述',
+    `is_enabled`  tinyint(1)                                                   DEFAULT '1' COMMENT '状态',
+    `created`     datetime                                                     DEFAULT NULL COMMENT '创建时间',
+    `created_by`  varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL COMMENT '创建者',
+    `modified`    datetime                                                     DEFAULT NULL COMMENT '修改时间',
+    `modified_by` varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL COMMENT '修改时间',
+    PRIMARY KEY (`id`)
+) ENGINE = InnoDB
+  DEFAULT CHARSET = utf8mb4
+  COLLATE = utf8mb4_general_ci COMMENT ='管理端：字典项';
+
+-- ----------------------------
+-- Records of sys_dict_item
+-- ----------------------------
+BEGIN;
 COMMIT;
 
 -- ----------------------------
@@ -510,8 +565,8 @@ INSERT INTO `sys_permission` (`id`, `parent_id`, `path`, `route_name`, `redirect
                               `show_link`, `rank`, `show_parent`, `keep_alive`, `frame_src`, `menu_type`, `permission`,
                               `is_enabled`, `created_by`, `created`, `modified_by`, `modified`)
 VALUES ('1785225857788874754', '1', '/sys/notice/index', 'noticeManager', '', 'sys/notice/index', '系统公告',
-        'ep:bell-filled', b'1', 4, b'1', b'0', '', 1, '', b'1', 'superadmin', '2024-04-30 16:33:07', 'superadmin',
-        '2024-04-30 16:33:53');
+        'ep:bell-filled', b'1', 5, b'1', b'0', '', 1, '', b'1', 'superadmin', '2024-04-30 16:33:07', 'superadmin',
+        '2024-05-05 09:28:36');
 INSERT INTO `sys_permission` (`id`, `parent_id`, `path`, `route_name`, `redirect`, `component`, `title`, `icon`,
                               `show_link`, `rank`, `show_parent`, `keep_alive`, `frame_src`, `menu_type`, `permission`,
                               `is_enabled`, `created_by`, `created`, `modified_by`, `modified`)
@@ -659,6 +714,51 @@ VALUES ('1785474601975836674', '1785244014243045378', '', '', '', '', '立即执
 INSERT INTO `sys_permission` (`id`, `parent_id`, `path`, `route_name`, `redirect`, `component`, `title`, `icon`,
                               `show_link`, `rank`, `show_parent`, `keep_alive`, `frame_src`, `menu_type`, `permission`,
                               `is_enabled`, `created_by`, `created`, `modified_by`, `modified`)
+VALUES ('1786930858465288193', '1', '/sys/dict/index', 'dictManger', '', 'sys/dict/index', '数据字典', 'ep:notebook',
+        b'1', 4, b'1', b'0', '', 1, '', b'1', 'superadmin', '2024-05-05 09:28:11', 'superadmin', '2024-05-05 09:28:21');
+INSERT INTO `sys_permission` (`id`, `parent_id`, `path`, `route_name`, `redirect`, `component`, `title`, `icon`,
+                              `show_link`, `rank`, `show_parent`, `keep_alive`, `frame_src`, `menu_type`, `permission`,
+                              `is_enabled`, `created_by`, `created`, `modified_by`, `modified`)
+VALUES ('1786931490559483905', '1786930858465288193', '', '', '', '', '字典查询', '', b'1', 1, b'1', b'0', '', 4,
+        'sys:dict:query', b'1', 'superadmin', '2024-05-05 09:30:42', NULL, NULL);
+INSERT INTO `sys_permission` (`id`, `parent_id`, `path`, `route_name`, `redirect`, `component`, `title`, `icon`,
+                              `show_link`, `rank`, `show_parent`, `keep_alive`, `frame_src`, `menu_type`, `permission`,
+                              `is_enabled`, `created_by`, `created`, `modified_by`, `modified`)
+VALUES ('1786931562953170945', '1786930858465288193', '', '', '', '', '字典新增', '', b'1', 2, b'1', b'0', '', 4,
+        'sys:dict:save', b'1', 'superadmin', '2024-05-05 09:30:59', NULL, NULL);
+INSERT INTO `sys_permission` (`id`, `parent_id`, `path`, `route_name`, `redirect`, `component`, `title`, `icon`,
+                              `show_link`, `rank`, `show_parent`, `keep_alive`, `frame_src`, `menu_type`, `permission`,
+                              `is_enabled`, `created_by`, `created`, `modified_by`, `modified`)
+VALUES ('1786931631978831874', '1786930858465288193', '', '', '', '', '字典更新', '', b'1', 3, b'1', b'0', '', 4,
+        'sys:dict:update', b'1', 'superadmin', '2024-05-05 09:31:15', NULL, NULL);
+INSERT INTO `sys_permission` (`id`, `parent_id`, `path`, `route_name`, `redirect`, `component`, `title`, `icon`,
+                              `show_link`, `rank`, `show_parent`, `keep_alive`, `frame_src`, `menu_type`, `permission`,
+                              `is_enabled`, `created_by`, `created`, `modified_by`, `modified`)
+VALUES ('1786931710399733762', '1786930858465288193', '', '', '', '', '字典删除', '', b'1', 4, b'1', b'0', '', 4,
+        'sys:dict:delete', b'1', 'superadmin', '2024-05-05 09:31:34', NULL, NULL);
+INSERT INTO `sys_permission` (`id`, `parent_id`, `path`, `route_name`, `redirect`, `component`, `title`, `icon`,
+                              `show_link`, `rank`, `show_parent`, `keep_alive`, `frame_src`, `menu_type`, `permission`,
+                              `is_enabled`, `created_by`, `created`, `modified_by`, `modified`)
+VALUES ('1786931835352244226', '1786930858465288193', '', '', '', '', '字典项查询', '', b'1', 5, b'1', b'0', '', 4,
+        'sys:dict:item:query', b'1', 'superadmin', '2024-05-05 09:32:04', 'superadmin', '2024-05-06 11:54:54');
+INSERT INTO `sys_permission` (`id`, `parent_id`, `path`, `route_name`, `redirect`, `component`, `title`, `icon`,
+                              `show_link`, `rank`, `show_parent`, `keep_alive`, `frame_src`, `menu_type`, `permission`,
+                              `is_enabled`, `created_by`, `created`, `modified_by`, `modified`)
+VALUES ('1786931957188386818', '1786930858465288193', '', '', '', '', '字典项新增', '', b'1', 6, b'1', b'0', '', 4,
+        'sys:dict:item:save', b'1', 'superadmin', '2024-05-05 09:32:33', 'superadmin', '2024-05-06 11:55:01');
+INSERT INTO `sys_permission` (`id`, `parent_id`, `path`, `route_name`, `redirect`, `component`, `title`, `icon`,
+                              `show_link`, `rank`, `show_parent`, `keep_alive`, `frame_src`, `menu_type`, `permission`,
+                              `is_enabled`, `created_by`, `created`, `modified_by`, `modified`)
+VALUES ('1786932016130940930', '1786930858465288193', '', '', '', '', '字典项修改', '', b'1', 7, b'1', b'0', '', 4,
+        'sys:dict:item:update', b'1', 'superadmin', '2024-05-05 09:32:47', 'superadmin', '2024-05-06 11:55:09');
+INSERT INTO `sys_permission` (`id`, `parent_id`, `path`, `route_name`, `redirect`, `component`, `title`, `icon`,
+                              `show_link`, `rank`, `show_parent`, `keep_alive`, `frame_src`, `menu_type`, `permission`,
+                              `is_enabled`, `created_by`, `created`, `modified_by`, `modified`)
+VALUES ('1786932087664795649', '1786930858465288193', '', '', '', '', '字典项删除', '', b'1', 8, b'1', b'0', '', 4,
+        'sys:dict:item:delete', b'1', 'superadmin', '2024-05-05 09:33:04', 'superadmin', '2024-05-06 11:55:16');
+INSERT INTO `sys_permission` (`id`, `parent_id`, `path`, `route_name`, `redirect`, `component`, `title`, `icon`,
+                              `show_link`, `rank`, `show_parent`, `keep_alive`, `frame_src`, `menu_type`, `permission`,
+                              `is_enabled`, `created_by`, `created`, `modified_by`, `modified`)
 VALUES ('2', '1', '/sys/user/index', 'userManger', NULL, 'sys/user/index', '用户管理', 'ri:admin-line', b'1', 1, b'1',
         b'0', NULL, 1, NULL, b'1', 'admin', '2024-03-25 09:37:45', NULL, NULL);
 INSERT INTO `sys_permission` (`id`, `parent_id`, `path`, `route_name`, `redirect`, `component`, `title`, `icon`,
@@ -738,8 +838,8 @@ COMMIT;
 DROP TABLE IF EXISTS `sys_product_permission`;
 CREATE TABLE `sys_product_permission`
 (
-    `product_id`    varchar(32) COLLATE utf8mb4_general_ci NOT NULL COMMENT '产品ID',
-    `permission_id` varchar(32) COLLATE utf8mb4_general_ci NOT NULL COMMENT '履约端-权限ID',
+    `product_id`    varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '产品ID',
+    `permission_id` varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '履约端-权限ID',
     PRIMARY KEY (`product_id`, `permission_id`) USING BTREE
 ) ENGINE = InnoDB
   DEFAULT CHARSET = utf8mb4
@@ -859,7 +959,7 @@ CREATE TABLE `sys_role`
 BEGIN;
 INSERT INTO `sys_role` (`id`, `name`, `code`, `description`, `is_system`, `is_enabled`, `created`, `created_by`,
                         `modified`, `modified_by`)
-VALUES ('1', 'admin', 'admin', '超级管理员', 1, 1, '2024-03-25 09:40:43', 'admin', NULL, NULL);
+VALUES ('1', 'admin', 'admin', '超级管理员', 1, 1, '2024-03-25 09:40:43', 'admin', '2024-05-06 11:54:32', 'superadmin');
 COMMIT;
 
 -- ----------------------------
@@ -868,8 +968,8 @@ COMMIT;
 DROP TABLE IF EXISTS `sys_role_permission`;
 CREATE TABLE `sys_role_permission`
 (
-    `role_id`       varchar(32) COLLATE utf8mb4_general_ci NOT NULL,
-    `permission_id` varchar(32) COLLATE utf8mb4_general_ci NOT NULL,
+    `role_id`       varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+    `permission_id` varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
     PRIMARY KEY (`role_id`, `permission_id`)
 ) ENGINE = InnoDB
   DEFAULT CHARSET = utf8mb4
@@ -958,6 +1058,24 @@ VALUES ('1', '1785474547487633409');
 INSERT INTO `sys_role_permission` (`role_id`, `permission_id`)
 VALUES ('1', '1785474601975836674');
 INSERT INTO `sys_role_permission` (`role_id`, `permission_id`)
+VALUES ('1', '1786930858465288193');
+INSERT INTO `sys_role_permission` (`role_id`, `permission_id`)
+VALUES ('1', '1786931490559483905');
+INSERT INTO `sys_role_permission` (`role_id`, `permission_id`)
+VALUES ('1', '1786931562953170945');
+INSERT INTO `sys_role_permission` (`role_id`, `permission_id`)
+VALUES ('1', '1786931631978831874');
+INSERT INTO `sys_role_permission` (`role_id`, `permission_id`)
+VALUES ('1', '1786931710399733762');
+INSERT INTO `sys_role_permission` (`role_id`, `permission_id`)
+VALUES ('1', '1786931835352244226');
+INSERT INTO `sys_role_permission` (`role_id`, `permission_id`)
+VALUES ('1', '1786931957188386818');
+INSERT INTO `sys_role_permission` (`role_id`, `permission_id`)
+VALUES ('1', '1786932016130940930');
+INSERT INTO `sys_role_permission` (`role_id`, `permission_id`)
+VALUES ('1', '1786932087664795649');
+INSERT INTO `sys_role_permission` (`role_id`, `permission_id`)
 VALUES ('1', '2');
 INSERT INTO `sys_role_permission` (`role_id`, `permission_id`)
 VALUES ('1', '3');
@@ -1012,7 +1130,7 @@ INSERT INTO `sys_user` (`id`, `username`, `nickname`, `password`, `gender`, `ema
                         `last_login_time`, `last_login_ip`, `last_pwd_reset_time`, `description`, `is_system`,
                         `is_enabled`, `created`, `created_by`, `modified`, `modified_by`)
 VALUES ('1', 'superadmin', '管理员', '$2a$10$bzGz6zZzAxkN0CRjPf0Pb.CetihWFQo8X6n0oKpZxb1vmxBZVJHIC', 0, NULL, NULL,
-        NULL, '2024-05-01 19:25:29', NULL, NULL, '租户-超级管理员', 1, 1, '2024-03-23 09:17:46', 'admin', NULL, NULL);
+        NULL, '2024-05-06 08:33:22', NULL, NULL, '租户-超级管理员', 1, 1, '2024-03-23 09:17:46', 'admin', NULL, NULL);
 COMMIT;
 
 -- ----------------------------
@@ -1021,8 +1139,8 @@ COMMIT;
 DROP TABLE IF EXISTS `sys_user_role`;
 CREATE TABLE `sys_user_role`
 (
-    `user_id` varchar(32) COLLATE utf8mb4_general_ci NOT NULL,
-    `role_id` varchar(32) COLLATE utf8mb4_general_ci NOT NULL,
+    `user_id` varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+    `role_id` varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
     PRIMARY KEY (`user_id`, `role_id`)
 ) ENGINE = InnoDB
   DEFAULT CHARSET = utf8mb4

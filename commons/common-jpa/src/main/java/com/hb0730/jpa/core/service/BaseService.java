@@ -49,6 +49,11 @@ public class BaseService<M extends BaseJpaRepository<E, ID>, E, ID> implements I
     }
 
     @Override
+    public E findById(ID id) {
+        return baseRepository.findById(id).orElse(null);
+    }
+
+    @Override
     public E getById(ID id) {
         if (null == id) {
             return null;

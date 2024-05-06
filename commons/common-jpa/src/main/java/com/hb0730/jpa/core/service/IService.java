@@ -58,10 +58,18 @@ public interface IService<E, ID> {
     /**
      * 查询所有
      *
-     * @param pageable .
+     * @param ids .
      * @return .
      */
     List<E> findAllByIds(Iterable<ID> ids);
+
+    /**
+     * 根据ID查询
+     *
+     * @param id .
+     * @return .
+     */
+    E findById(ID id);
 
     /**
      * 根据ID查询
