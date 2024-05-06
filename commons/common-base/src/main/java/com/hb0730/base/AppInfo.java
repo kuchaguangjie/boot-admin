@@ -33,21 +33,13 @@ public class AppInfo {
      */
     private String pid;
     /**
-     * 应用启动时间
-     */
-    private String startTime;
-    /**
      * 主机
      */
     private String host;
     /**
-     * 环境
+     * 用户名
      */
-    private String profile;
-    /**
-     * 是否为调试模式
-     */
-    private boolean debug;
+    private String username;
 
 
 }

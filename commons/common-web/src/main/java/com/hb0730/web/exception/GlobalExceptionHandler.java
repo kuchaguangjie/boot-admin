@@ -31,7 +31,7 @@ public class GlobalExceptionHandler {
      */
     @ExceptionHandler(ServiceException.class)
     public R<Void> handleServiceException(ServiceException e) {
-        log.error(e.getMessage());
+        log.error(e.getMessage(), e);
         Integer code = e.getCode();
         return ObjectUtil.isNotNull(code) ? R.NG(code, e.getMessage()) : R.NG(e.getMessage());
     }
@@ -43,7 +43,7 @@ public class GlobalExceptionHandler {
     public R<Void> handleHttpRequestMethodNotSupported(HttpRequestMethodNotSupportedException e,
                                                        HttpServletRequest request) {
         String requestURI = request.getRequestURI();
-        log.error("请求地址'{}',不支持'{}'请求", requestURI, e.getMethod());
+        log.error("请求地址'{}',不支持'{}'请求", requestURI, e.getMethod(), e);
         return R.NG(e.getMessage());
     }
 
@@ -57,7 +57,7 @@ public class GlobalExceptionHandler {
     public R<Void> methodArgumentTypeMismatchException(
             MethodArgumentTypeMismatchException e,
             HttpServletRequest request) {
-        log.error("请求地址：{}，参数类型不匹配，异常信息：{}", request.getRequestURI(), e.getMessage());
+        log.error("请求地址：{}，参数类型不匹配，异常信息：{}", request.getRequestURI(), e.getMessage(), e);
         return R.NG(
                 String.format("参数类型不匹配，参数%s的值%s不合法", e.getName(), e.getValue())
         );
@@ -71,7 +71,7 @@ public class GlobalExceptionHandler {
      */
     @ExceptionHandler(RuntimeException.class)
     public R<Void> handleRuntimeException(RuntimeException e, HttpServletRequest request) {
-        log.error("请求地址：{}，异常信息：{}", request.getRequestURI(), e.getMessage());
+        log.error("请求地址：{}，异常信息：{} ", request.getRequestURI(), e.getMessage(), e);
         return R.NG(e.getMessage());
     }
 
@@ -83,7 +83,7 @@ public class GlobalExceptionHandler {
      */
     @ExceptionHandler(Exception.class)
     public R<Void> handleException(Exception e, HttpServletRequest request) {
-        log.error("请求地址：{}，异常信息：{}", request.getRequestURI(), e.getMessage());
+        log.error("请求地址：{}，异常信息：{}", request.getRequestURI(), e.getMessage(), e);
         return R.NG(e.getMessage());
     }
 
@@ -93,8 +93,9 @@ public class GlobalExceptionHandler {
      * @param e 异常
      * @return .
      */
+    @ExceptionHandler(BindException.class)
     public R<Void> handleBindException(BindException e) {
-        log.error(e.getMessage());
+        log.error(e.getMessage(), e);
         List<ObjectError> allErrors = e.getAllErrors();
         StringJoiner joiner = new StringJoiner(",");
         allErrors.forEach(objectError -> joiner.add(objectError.getDefaultMessage()));
@@ -110,7 +111,7 @@ public class GlobalExceptionHandler {
      */
     @ExceptionHandler(ConstraintViolationException.class)
     public R<Void> constraintViolationException(ConstraintViolationException e) {
-        log.error(e.getMessage());
+        log.error(e.getMessage(), e);
         StringJoiner joiner = new StringJoiner(",");
         e.getConstraintViolations().forEach(constraintViolation -> joiner.add(constraintViolation.getMessage()));
         return R.NG(joiner.toString());
@@ -124,7 +125,7 @@ public class GlobalExceptionHandler {
      */
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public R<Void> handleMethodArgumentNotValidException(MethodArgumentNotValidException e) {
-        log.error(e.getMessage());
+        log.error(e.getMessage(), e);
         String message = Objects.requireNonNull(e.getBindingResult().getFieldError()).getDefaultMessage();
         return R.NG(message);
     }
