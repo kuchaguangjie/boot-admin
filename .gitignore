@@ -145,3 +145,9 @@ fabric.properties
 
 ## docker
 docker/data
+
+## application-hb0730.yml
+**/application-hb0730.yml
+**/application-hb0730.yml.bak
+**/application-hb0730.yml.bak.*
+**/application-*-hb0730.yml

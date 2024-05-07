@@ -117,6 +117,7 @@ public class JwtUtil {
                 .withClaim("userid", id)
                 .withClaim("username", username)
                 .withClaim("sysCode", sysCode)
+                .withClaim("timestamp", System.currentTimeMillis())
                 .sign(algorithm);
     }
 
