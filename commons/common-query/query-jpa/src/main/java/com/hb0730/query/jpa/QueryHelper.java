@@ -221,6 +221,18 @@ public class QueryHelper {
                 }
             }
         }
+        // 注解在类上
+        Annotation[] annotations = beanParam.getClass().getAnnotations();
+        for (Annotation annotation : annotations) {
+            AbstractPredicateHandler handler = specificationHandlerMap.get(annotation.annotationType());
+            if (handler != null) {
+                Predicate predicate = buildDefaultPredicate(criteriaBuilder, null, from, handler, "", beanParam, annotation);
+                if (predicate != null) {
+                    predicates.add(predicate);
+                }
+            }
+        }
+
         return predicates;
     }
 

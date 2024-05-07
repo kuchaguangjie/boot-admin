@@ -9,7 +9,7 @@
  Target Server Version : 80300 (8.3.0)
  File Encoding         : 65001
 
- Date: 06/05/2024 11:55:44
+ Date: 07/05/2024 16:07:13
 */
 
 SET NAMES utf8mb4;
@@ -137,8 +137,8 @@ INSERT INTO `bas_permission` (`id`, `parent_id`, `path`, `route_name`, `redirect
                               `show_link`, `rank`, `show_parent`, `keep_alive`, `frame_src`, `menu_type`, `permission`,
                               `is_enabled`, `created_by`, `created`, `modified_by`, `modified`)
 VALUES ('1785232457840779265', '1785232090411360258', '/bas/role/index', 'BasRoleManager', '', 'basic/role/index',
-        '角色管理', '', b'1', 3, b'1', b'0', '', 1, '', b'1', 'superadmin', '2024-04-30 16:59:21', 'superadmin',
-        '2024-04-30 17:12:38');
+        '角色管理', '', b'1', 4, b'1', b'0', '', 1, '', b'1', 'superadmin', '2024-04-30 16:59:21', 'superadmin',
+        '2024-05-07 15:06:22');
 INSERT INTO `bas_permission` (`id`, `parent_id`, `path`, `route_name`, `redirect`, `component`, `title`, `icon`,
                               `show_link`, `rank`, `show_parent`, `keep_alive`, `frame_src`, `menu_type`, `permission`,
                               `is_enabled`, `created_by`, `created`, `modified_by`, `modified`)
@@ -209,6 +209,59 @@ INSERT INTO `bas_permission` (`id`, `parent_id`, `path`, `route_name`, `redirect
                               `is_enabled`, `created_by`, `created`, `modified_by`, `modified`)
 VALUES ('1785233423612829698', '1785232457840779265', '', '', '', '', '角色赋权', '', b'1', 5, b'1', b'0', '', 4,
         'bas:role:grant', b'1', 'superadmin', '2024-04-30 17:03:11', NULL, NULL);
+INSERT INTO `bas_permission` (`id`, `parent_id`, `path`, `route_name`, `redirect`, `component`, `title`, `icon`,
+                              `show_link`, `rank`, `show_parent`, `keep_alive`, `frame_src`, `menu_type`, `permission`,
+                              `is_enabled`, `created_by`, `created`, `modified_by`, `modified`)
+VALUES ('1787740678002376706', '1785232090411360258', '/bas/post/index', 'BasPostManger', '', 'basic/post/index',
+        '岗位管理', '', b'1', 3, b'1', b'0', '', 1, '', b'1', 'superadmin', '2024-05-07 15:06:07', NULL, NULL);
+INSERT INTO `bas_permission` (`id`, `parent_id`, `path`, `route_name`, `redirect`, `component`, `title`, `icon`,
+                              `show_link`, `rank`, `show_parent`, `keep_alive`, `frame_src`, `menu_type`, `permission`,
+                              `is_enabled`, `created_by`, `created`, `modified_by`, `modified`)
+VALUES ('1787743874431168514', '1787740678002376706', '', '', '', '', '岗位查询', '', b'1', 1, b'1', b'0', '', 4,
+        'bas:post:page', b'1', 'superadmin', '2024-05-07 15:18:49', 'superadmin', '2024-05-07 15:50:16');
+INSERT INTO `bas_permission` (`id`, `parent_id`, `path`, `route_name`, `redirect`, `component`, `title`, `icon`,
+                              `show_link`, `rank`, `show_parent`, `keep_alive`, `frame_src`, `menu_type`, `permission`,
+                              `is_enabled`, `created_by`, `created`, `modified_by`, `modified`)
+VALUES ('1787743960653475841', '1787740678002376706', '', '', '', '', '岗位新增', '', b'1', 2, b'1', b'0', '', 4,
+        'bas:post:save', b'1', 'superadmin', '2024-05-07 15:19:10', 'superadmin', '2024-05-07 15:50:21');
+INSERT INTO `bas_permission` (`id`, `parent_id`, `path`, `route_name`, `redirect`, `component`, `title`, `icon`,
+                              `show_link`, `rank`, `show_parent`, `keep_alive`, `frame_src`, `menu_type`, `permission`,
+                              `is_enabled`, `created_by`, `created`, `modified_by`, `modified`)
+VALUES ('1787744037283409922', '1787740678002376706', '', '', '', '', '岗位更新', '', b'1', 3, b'1', b'0', '', 4,
+        'bas:post:update', b'1', 'superadmin', '2024-05-07 15:19:28', 'superadmin', '2024-05-07 15:50:27');
+INSERT INTO `bas_permission` (`id`, `parent_id`, `path`, `route_name`, `redirect`, `component`, `title`, `icon`,
+                              `show_link`, `rank`, `show_parent`, `keep_alive`, `frame_src`, `menu_type`, `permission`,
+                              `is_enabled`, `created_by`, `created`, `modified_by`, `modified`)
+VALUES ('1787744103364669441', '1787740678002376706', '', '', '', '', '岗位删除', '', b'1', 4, b'1', b'0', '', 4,
+        'bas:post:delete', b'1', 'superadmin', '2024-05-07 15:19:44', 'superadmin', '2024-05-07 15:50:31');
+COMMIT;
+
+-- ----------------------------
+-- Table structure for bas_post
+-- ----------------------------
+DROP TABLE IF EXISTS `bas_post`;
+CREATE TABLE `bas_post`
+(
+    `id`          varchar(32) COLLATE utf8mb4_general_ci NOT NULL,
+    `code`        varchar(32) COLLATE utf8mb4_general_ci NOT NULL COMMENT '岗位编码',
+    `name`        varchar(32) COLLATE utf8mb4_general_ci NOT NULL COMMENT '岗位名称',
+    `description` varchar(255) COLLATE utf8mb4_general_ci                      DEFAULT NULL COMMENT '描述',
+    `sort`        int                                                          DEFAULT NULL COMMENT '排序',
+    `is_enabled`  tinyint                                                      DEFAULT NULL COMMENT '状态',
+    `sys_code`    varchar(32) COLLATE utf8mb4_general_ci NOT NULL COMMENT '商户识别码',
+    `created`     datetime                                                     DEFAULT NULL COMMENT '创建时间',
+    `created_by`  varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL COMMENT '创建者',
+    `modified`    datetime                                                     DEFAULT NULL COMMENT '修改时间',
+    `modified_by` varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL COMMENT '修改时间',
+    PRIMARY KEY (`id`)
+) ENGINE = InnoDB
+  DEFAULT CHARSET = utf8mb4
+  COLLATE = utf8mb4_general_ci COMMENT ='履约端：岗位';
+
+-- ----------------------------
+-- Records of bas_post
+-- ----------------------------
+BEGIN;
 COMMIT;
 
 -- ----------------------------
@@ -241,7 +294,7 @@ BEGIN;
 INSERT INTO `bas_role` (`id`, `name`, `code`, `description`, `org_id`, `sys_code`, `is_system`, `is_enabled`, `created`,
                         `created_by`, `modified`, `modified_by`)
 VALUES ('1785229829160034304', '管理角色', 'PA001', NULL, '1785229829122285568', 'PA001', 1, 1, '2024-04-30 16:48:54',
-        'superadmin', NULL, NULL);
+        'superadmin', '2024-05-07 15:26:02', 'superadmin');
 COMMIT;
 
 -- ----------------------------
@@ -297,6 +350,16 @@ INSERT INTO `bas_role_permission` (`role_id`, `permission_id`)
 VALUES ('1785229829160034304', '1785233355887403010');
 INSERT INTO `bas_role_permission` (`role_id`, `permission_id`)
 VALUES ('1785229829160034304', '1785233423612829698');
+INSERT INTO `bas_role_permission` (`role_id`, `permission_id`)
+VALUES ('1785229829160034304', '1787740678002376706');
+INSERT INTO `bas_role_permission` (`role_id`, `permission_id`)
+VALUES ('1785229829160034304', '1787743874431168514');
+INSERT INTO `bas_role_permission` (`role_id`, `permission_id`)
+VALUES ('1785229829160034304', '1787743960653475841');
+INSERT INTO `bas_role_permission` (`role_id`, `permission_id`)
+VALUES ('1785229829160034304', '1787744037283409922');
+INSERT INTO `bas_role_permission` (`role_id`, `permission_id`)
+VALUES ('1785229829160034304', '1787744103364669441');
 COMMIT;
 
 -- ----------------------------
@@ -337,8 +400,28 @@ INSERT INTO `bas_user` (`id`, `org_id`, `username`, `password`, `nickname`, `pho
                         `created_by`, `modified`, `modified_by`)
 VALUES ('1785229829181005824', '1785229829122285568', '13111111111',
         '$2a$10$bzGz6zZzAxkN0CRjPf0Pb.CetihWFQo8X6n0oKpZxb1vmxBZVJHIC', '管理员', '13111111111', NULL, NULL, 0,
-        '2024-04-30 18:07:46', NULL, 'PA001', 1, 1, '2024-04-30 16:48:54', 'superadmin', '2024-04-30 18:04:44',
+        '2024-05-07 15:51:19', NULL, 'PA001', 1, 1, '2024-04-30 16:48:54', 'superadmin', '2024-04-30 18:04:44',
         'superadmin');
+COMMIT;
+
+-- ----------------------------
+-- Table structure for bas_user_post
+-- ----------------------------
+DROP TABLE IF EXISTS `bas_user_post`;
+CREATE TABLE `bas_user_post`
+(
+    `user_id`  varchar(32) COLLATE utf8mb4_general_ci                       NOT NULL,
+    `post_id`  varchar(32) COLLATE utf8mb4_general_ci                       NOT NULL,
+    `sys_code` varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '商户识别码',
+    PRIMARY KEY (`user_id`, `post_id`)
+) ENGINE = InnoDB
+  DEFAULT CHARSET = utf8mb4
+  COLLATE = utf8mb4_general_ci COMMENT ='管理端： 用户岗位';
+
+-- ----------------------------
+-- Records of bas_user_post
+-- ----------------------------
+BEGIN;
 COMMIT;
 
 -- ----------------------------
@@ -829,7 +912,7 @@ BEGIN;
 INSERT INTO `sys_product` (`id`, `code`, `name`, `principal`, `contact`, `site_num`, `account_num`, `description`,
                            `is_enabled`, `created_by`, `created`, `modified_by`, `modified`)
 VALUES ('1785229367733444609', 'T001', '正式产品', '', '', 0, 0, '', b'1', 'superadmin', '2024-04-30 16:47:04',
-        'superadmin', '2024-04-30 17:51:34');
+        'superadmin', '2024-05-07 15:26:02');
 COMMIT;
 
 -- ----------------------------
@@ -885,6 +968,16 @@ INSERT INTO `sys_product_permission` (`product_id`, `permission_id`)
 VALUES ('1785229367733444609', '1785233355887403010');
 INSERT INTO `sys_product_permission` (`product_id`, `permission_id`)
 VALUES ('1785229367733444609', '1785233423612829698');
+INSERT INTO `sys_product_permission` (`product_id`, `permission_id`)
+VALUES ('1785229367733444609', '1787740678002376706');
+INSERT INTO `sys_product_permission` (`product_id`, `permission_id`)
+VALUES ('1785229367733444609', '1787743874431168514');
+INSERT INTO `sys_product_permission` (`product_id`, `permission_id`)
+VALUES ('1785229367733444609', '1787743960653475841');
+INSERT INTO `sys_product_permission` (`product_id`, `permission_id`)
+VALUES ('1785229367733444609', '1787744037283409922');
+INSERT INTO `sys_product_permission` (`product_id`, `permission_id`)
+VALUES ('1785229367733444609', '1787744103364669441');
 COMMIT;
 
 -- ----------------------------
@@ -1130,7 +1223,7 @@ INSERT INTO `sys_user` (`id`, `username`, `nickname`, `password`, `gender`, `ema
                         `last_login_time`, `last_login_ip`, `last_pwd_reset_time`, `description`, `is_system`,
                         `is_enabled`, `created`, `created_by`, `modified`, `modified_by`)
 VALUES ('1', 'superadmin', '管理员', '$2a$10$bzGz6zZzAxkN0CRjPf0Pb.CetihWFQo8X6n0oKpZxb1vmxBZVJHIC', 0, NULL, NULL,
-        NULL, '2024-05-06 08:33:22', NULL, NULL, '租户-超级管理员', 1, 1, '2024-03-23 09:17:46', 'admin', NULL, NULL);
+        NULL, '2024-05-07 15:49:32', NULL, NULL, '租户-超级管理员', 1, 1, '2024-03-23 09:17:46', 'admin', NULL, NULL);
 COMMIT;
 
 -- ----------------------------

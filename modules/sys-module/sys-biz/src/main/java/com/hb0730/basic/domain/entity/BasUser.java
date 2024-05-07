@@ -36,6 +36,15 @@ public class BasUser extends BaseTenantEntity {
     @ManyToOne(fetch = jakarta.persistence.FetchType.EAGER)
     @JoinColumn(name = "org_id")
     private BasOrg org;
+
+    /**
+     * 所属岗位
+     */
+    @ManyToMany(fetch = jakarta.persistence.FetchType.EAGER)
+    @JoinTable(name = "bas_user_post",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "post_id"))
+    private List<BasPost> posts;
     /**
      * 角色
      */

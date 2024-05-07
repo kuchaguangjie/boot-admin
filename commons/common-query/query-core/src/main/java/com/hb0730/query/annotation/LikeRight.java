@@ -1,11 +1,20 @@
 package com.hb0730.query.annotation;
 
+import java.lang.annotation.Documented;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
+
 /**
  * 用于“右模糊匹配某个元素”({@code LIKE 'value%'})场景的注解.
  *
  * @author <a href="mailto:huangbing0730@gmail">hb0730</a>
  * @date 2024/4/29
  */
+@Documented
+@Target(ElementType.FIELD)
+@Retention(RetentionPolicy.RUNTIME)
 public @interface LikeRight {
 
     /**

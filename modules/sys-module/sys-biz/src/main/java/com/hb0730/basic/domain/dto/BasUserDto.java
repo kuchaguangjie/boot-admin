@@ -30,6 +30,11 @@ public class BasUserDto extends BaseTenantDto {
     @Schema(description = "所属机构")
     private OrgSmallDto org;
     /**
+     * 岗位
+     */
+    @Schema(description = "岗位")
+    private List<PostSmallDto> posts;
+    /**
      * 角色
      */
     @Schema(description = "角色")
