@@ -1,5 +1,6 @@
 package com.hb0730.jpa.core;
 
+import com.hb0730.jpa.annotations.TenantId;
 import com.hb0730.jpa.core.domain.BaseEntity;
 import jakarta.persistence.MappedSuperclass;
 import jakarta.validation.constraints.NotBlank;
@@ -21,5 +22,6 @@ public class BaseTenantEntity extends BaseEntity {
      * 租户ID
      */
     @NotBlank(message = "租户代码不能为空")
+    @TenantId
     private String sysCode;
 }
