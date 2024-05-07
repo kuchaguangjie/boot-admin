@@ -26,6 +26,13 @@ public class DictItemQuery extends BaseQuery {
     private String dictId;
 
     /**
+     * 字典类型
+     */
+    @Equals
+    @Schema(description = "字典类型")
+    private String dictType;
+
+    /**
      * 字典标签
      */
     @Like

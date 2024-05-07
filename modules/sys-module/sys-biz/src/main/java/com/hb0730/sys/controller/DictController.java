@@ -2,6 +2,8 @@ package com.hb0730.sys.controller;
 
 import com.hb0730.base.R;
 import com.hb0730.common.api.JsfPage;
+import com.hb0730.domain.SelectOptionVO;
+import com.hb0730.security.annotation.AnonymousAccess;
 import com.hb0730.sys.domain.dto.DictDto;
 import com.hb0730.sys.domain.dto.DictItemDto;
 import com.hb0730.sys.domain.query.DictItemQuery;
@@ -9,6 +11,7 @@ import com.hb0730.sys.domain.query.DictQuery;
 import com.hb0730.sys.service.SysDictItemService;
 import com.hb0730.sys.service.SysDictService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameters;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
@@ -21,6 +24,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
@@ -121,6 +125,24 @@ public class DictController {
     public R<String> deleteItem(String id) {
         dictItemService.deleteById(id);
         return R.OK();
+    }
+
+
+    /**
+     * 查询字典项选项
+     *
+     * @param type 字典类型
+     * @return .
+     */
+    @GetMapping("/options")
+    @AnonymousAccess
+    @Operation(summary = "查询字典项选项(支持匿名访问)")
+    @Parameters({
+            @io.swagger.v3.oas.annotations.Parameter(name = "type", description = "字典类型", required = true)
+    })
+    public R<List<SelectOptionVO>> selectOption(@RequestParam String type) {
+        List<SelectOptionVO> res = dictItemService.selectOption(type);
+        return R.OK(res);
     }
 
 }
