@@ -2,10 +2,13 @@ package com.hb0730.jpa.config;
 
 import com.hb0730.base.core.UserContext;
 import com.hb0730.base.core.UserInfo;
+import com.hb0730.base.utils.StrUtil;
 import com.hb0730.jpa.handler.TenantLineHandler;
 import com.hb0730.jpa.plugins.TenantSqlInterceptor;
 import lombok.Data;
+import lombok.extern.slf4j.Slf4j;
 import net.sf.jsqlparser.expression.Expression;
+import net.sf.jsqlparser.expression.NullValue;
 import net.sf.jsqlparser.expression.StringValue;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.autoconfigure.orm.jpa.HibernatePropertiesCustomizer;
@@ -23,6 +26,7 @@ import java.util.List;
  */
 @Configuration
 @EnableConfigurationProperties(HibernateConfiguration.TenantProperties.class)
+@Slf4j
 public class HibernateConfiguration {
     @Bean
     @ConditionalOnProperty(prefix = "boot.admin.tenant", name = "enableTenantInterceptor", havingValue = "true", matchIfMissing = true)
@@ -35,9 +39,15 @@ public class HibernateConfiguration {
                     public Expression getTenantId() {
                         UserInfo userInfo = UserContext.get();
                         if (userInfo == null) {
-                            return null;
+                            log.warn("无法获取有效的租户id - sysCode");
+                            return new NullValue();
                         }
-                        return new StringValue(userInfo.getSysCode());
+                        String sysCode = userInfo.getSysCode();
+                        if (StrUtil.isBlank(sysCode)) {
+                            log.warn("无法获取有效的租户id - sysCode");
+                            return new NullValue();
+                        }
+                        return new StringValue(sysCode);
                     }
 
                     @Override

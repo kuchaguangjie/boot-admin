@@ -3,6 +3,7 @@ package com.hb0730.common.mybatis.tenant.handler;
 import com.baomidou.mybatisplus.extension.plugins.handler.TenantLineHandler;
 import com.hb0730.base.core.TenantContext;
 import com.hb0730.base.core.UserInfo;
+import com.hb0730.base.utils.StrUtil;
 import com.hb0730.common.mybatis.tenant.config.TenantProperties;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -29,6 +30,10 @@ public class PlusTenantLineHandler implements TenantLineHandler {
             return new NullValue();
         }
         String sysCode = userInfo.getSysCode();
+        if (StrUtil.isBlank(sysCode)) {
+            log.warn("无法获取有效的租户id - sysCode");
+            return new NullValue();
+        }
         return new StringValue(sysCode);
     }
 
