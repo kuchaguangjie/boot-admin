@@ -62,28 +62,4 @@ public class SysTenantOssConfigService extends BaseService<SysTenantOssConfigRep
         save(entity);
         ossCache.set(entity);
     }
-
-
-    /**
-     * 刷新缓存
-     *
-     * @param sysCode 商户编码,为空则刷新所有
-     */
-    public void refreshCache(String sysCode) {
-        if (StrUtil.isBlank(sysCode)) {
-            _refreshCache();
-        } else {
-            _refreshCache(sysCode);
-        }
-    }
-
-    private void _refreshCache(String sysCode) {
-        SysOssConfig sysOssConfig = baseRepository.findBySysCode(sysCode);
-        ossCache.set(sysOssConfig);
-    }
-
-    private void _refreshCache() {
-        ossCache.clear();
-        baseRepository.findAll().forEach(ossCache::set);
-    }
 }

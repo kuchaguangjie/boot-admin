@@ -35,4 +35,17 @@ public interface ApplicationRunner extends org.springframework.boot.ApplicationR
      * @param code 编码
      */
     void refresh(@Nullable String code);
+
+
+    /**
+     * 刷新缓存
+     */
+    interface RefreshCache {
+        /**
+         * 刷新缓存
+         *
+         * @param sysCode .
+         */
+        void refreshCache(@Nullable String sysCode);
+    }
 }

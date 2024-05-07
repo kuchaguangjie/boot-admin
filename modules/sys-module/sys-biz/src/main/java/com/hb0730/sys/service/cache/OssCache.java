@@ -1,12 +1,16 @@
 package com.hb0730.sys.service.cache;
 
+import com.hb0730.base.ApplicationRunner;
 import com.hb0730.base.utils.JsonUtil;
+import com.hb0730.base.utils.StrUtil;
 import com.hb0730.cache.core.BootAdminCache;
 import com.hb0730.cache.core.CacheUtil;
 import com.hb0730.sys.domain.entity.SysOssConfig;
+import com.hb0730.sys.repository.SysTenantOssConfigRepository;
 import jakarta.annotation.Resource;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
 
 import java.util.Optional;
@@ -20,9 +24,13 @@ import java.util.Set;
  */
 @Component
 @Slf4j
-public class OssCache implements CacheUtil {
+public class OssCache implements CacheUtil, ApplicationRunner.RefreshCache {
     @Resource
     private BootAdminCache cache;
+    @Lazy
+    @Resource
+    private SysTenantOssConfigRepository repository;
+
 
     @Getter
     enum KeyValue implements CacheUtil.KeyValue {
@@ -96,5 +104,29 @@ public class OssCache implements CacheUtil {
             log.info("清理oss配置缓存:{}", keys);
             cache.delete(keys);
         });
+    }
+
+    /**
+     * 刷新缓存
+     *
+     * @param sysCode 商户编码,为空则刷新所有
+     */
+    @Override
+    public void refreshCache(String sysCode) {
+        if (StrUtil.isBlank(sysCode)) {
+            _refreshCache();
+        } else {
+            _refreshCache(sysCode);
+        }
+    }
+
+    private void _refreshCache(String sysCode) {
+        SysOssConfig sysOssConfig = repository.findBySysCode(sysCode);
+        this.set(sysOssConfig);
+    }
+
+    private void _refreshCache() {
+        this.clear();
+        repository.findAll().forEach(this::set);
     }
 }
