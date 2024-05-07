@@ -27,22 +27,22 @@ public interface ICache {
      *
      * @param key key
      */
-    void delete(String key);
+    void del(String key);
 
     /**
      * 删除多个key
      *
      * @param keys keys
      */
-    void delete(Set<String> keys);
+    void del(Set<String> keys);
 
     /**
      * 删除多个key
      *
      * @param keys keys
      */
-    default void delete(String... keys) {
-        delete(Set.of(keys));
+    default void del(String... keys) {
+        del(Set.of(keys));
     }
 
     /**

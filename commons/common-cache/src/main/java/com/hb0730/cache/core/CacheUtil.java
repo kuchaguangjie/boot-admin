@@ -36,7 +36,7 @@ public interface CacheUtil {
     }
 
     static String buildKeys(KeyValue kv, Object... keys) {
-        return concatKeys(kv.getPrefix(), keys);
+        return kv.getPrefix() + CACHE_SPLICE_COLON + concatKeys(keys);
     }
 
     static String concatKeys(Object... keys) {

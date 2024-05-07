@@ -49,22 +49,22 @@ public class BootAdminCache implements ICache {
     }
 
     @Override
-    public void delete(String key) {
+    public void del(String key) {
         String _key = normalizeKey(key);
         if (StrUtil.isBlank(_key)) {
             return;
         }
-        cache.delete(_key);
+        cache.del(_key);
     }
 
     @Override
-    public void delete(Set<String> keys) {
+    public void del(Set<String> keys) {
         if (CollectionUtil.isEmpty(keys)) {
             return;
         }
         Set<String> _keys = Sets.newHashSet();
         keys.forEach(key -> _keys.add(normalizeKey(key)));
-        cache.delete(_keys);
+        cache.del(_keys);
     }
 
     @Override

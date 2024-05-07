@@ -57,7 +57,7 @@ public class JwtTokenRedisCache implements TokenProvider {
     @Override
     public boolean removeToken(String accessToken) {
         String cacheKey = getCacheKey(accessToken);
-        cache.delete(cacheKey);
+        cache.del(cacheKey);
         return true;
     }
 

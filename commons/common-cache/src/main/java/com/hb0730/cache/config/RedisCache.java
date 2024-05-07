@@ -51,12 +51,12 @@ public class RedisCache implements ICache {
     }
 
     @Override
-    public void delete(String key) {
+    public void del(String key) {
         redisTemplate.delete(key);
     }
 
     @Override
-    public void delete(Set<String> keys) {
+    public void del(Set<String> keys) {
         redisTemplate.delete(keys);
     }
 

@@ -57,7 +57,7 @@ public class UserRedisCache implements UserProvider {
             return false;
         }
         String cacheKey = getCacheKey(key);
-        cache.delete(cacheKey);
+        cache.del(cacheKey);
         return true;
     }
 

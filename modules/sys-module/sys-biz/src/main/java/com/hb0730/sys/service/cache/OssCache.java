@@ -102,7 +102,7 @@ public class OssCache implements CacheUtil, ApplicationRunner.RefreshCache {
         Optional<Set<String>> keyOptional = cache.scanKeys(getCacheKey(KeyValue.OSS_CONFIG, "*"));
         keyOptional.ifPresent(keys -> {
             log.info("清理oss配置缓存:{}", keys);
-            cache.delete(keys);
+            cache.del(keys);
         });
     }
 
