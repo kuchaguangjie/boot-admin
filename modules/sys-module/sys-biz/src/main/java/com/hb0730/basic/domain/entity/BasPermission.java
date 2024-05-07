@@ -71,6 +71,7 @@ public class BasPermission extends BaseEntity {
     /**
      * 菜单排序，值越高排的越后（只针对顶级路由）
      */
+    @Column(name = "`rank`")
     private Integer rank = 99;
     /**
      * 是否显示父菜单

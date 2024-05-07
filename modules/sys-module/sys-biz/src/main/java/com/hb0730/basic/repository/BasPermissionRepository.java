@@ -20,7 +20,8 @@ public interface BasPermissionRepository extends BaseJpaRepository<BasPermission
      * @param roleIds 角色ID
      * @return .
      */
-    @Query("SELECT p FROM BasPermission p JOIN BasRolePermission rp ON p.id = rp.permissionId WHERE rp.roleId IN ?1")
+    @Query("SELECT p FROM BasPermission p JOIN BasRolePermission rp ON p.id = rp.permissionId WHERE rp.roleId IN ?1 " +
+            "AND p.enabled =true ORDER BY p.rank")
     List<BasPermission> findAllByRoleIdIn(List<String> roleIds);
 
 

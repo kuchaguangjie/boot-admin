@@ -32,6 +32,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * @author <a href="mailto:huangbing0730@gmail">hb0730</a>
@@ -235,7 +236,7 @@ public class SysTenantPermissionService extends BaseService<SysTenantPermissionR
                         rolePermission.setId(permission.getId());
                         return rolePermission;
                     }
-            ).toList();
+            ).collect(Collectors.toList());
             basRole.setPermissions(permissions);
         }
 
@@ -256,7 +257,7 @@ public class SysTenantPermissionService extends BaseService<SysTenantPermissionR
                         rolePermission.setId(permissionId);
                         return rolePermission;
                     }
-            ).toList();
+            ).collect(Collectors.toList());
             tenantRole.setPermissions(permissions);
         }
         return tenantRole;

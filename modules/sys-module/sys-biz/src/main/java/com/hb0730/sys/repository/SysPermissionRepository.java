@@ -65,6 +65,6 @@ public interface SysPermissionRepository extends BaseJpaRepository<SysPermission
      * @return 权限
      */
     @Query("select p from SysPermission p join SysRolePermission rp on p.id = rp.permissionId where rp.roleId in ?1 " +
-            "ORDER BY p.rank")
+            "AND p.enabled = true ORDER BY p.rank")
     List<SysPermission> findAllByRoleIdIn(List<String> roleIds);
 }
