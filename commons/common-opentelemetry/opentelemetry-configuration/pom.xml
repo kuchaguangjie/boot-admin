@@ -37,7 +37,6 @@
             <groupId>com.hb0730</groupId>
             <artifactId>opentelemetry-rpc</artifactId>
             <version>${revision}</version>
-            <optional>true</optional>
         </dependency>
     </dependencies>
 
