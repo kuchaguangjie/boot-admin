@@ -12,7 +12,7 @@ import java.util.List;
  * @date 2024/5/2
  */
 @Repository
-public interface BaseOrgRepository extends BaseJpaRepository<BasOrg, String> {
+public interface BasOrgRepository extends BaseJpaRepository<BasOrg, String> {
 
     /**
      * 获取顶级机构

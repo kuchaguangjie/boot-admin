@@ -7,8 +7,8 @@ import com.hb0730.basic.domain.dto.BasOrgDto;
 import com.hb0730.basic.domain.entity.BasOrg;
 import com.hb0730.basic.domain.query.BasOrgQuery;
 import com.hb0730.basic.domain.query.BasOrgTreeQuery;
+import com.hb0730.basic.repository.BasOrgRepository;
 import com.hb0730.basic.repository.BasUserRepository;
-import com.hb0730.basic.repository.BaseOrgRepository;
 import com.hb0730.basic.service.mapstruct.BasOrgMapstruct;
 import com.hb0730.jpa.core.service.BaseService;
 import com.hb0730.query.jpa.QueryHelper;
@@ -31,7 +31,7 @@ import java.util.List;
 @Service
 @Slf4j
 @RequiredArgsConstructor
-public class BasOrgService extends BaseService<BaseOrgRepository, BasOrg, String> {
+public class BasOrgService extends BaseService<BasOrgRepository, BasOrg, String> {
     private final BasOrgMapstruct mapstruct;
     @Lazy
     @Resource
