@@ -23,9 +23,9 @@ public class OssProperties {
     /**
      * 阿里云oss
      */
-    private AliyunOssProperties aliyun;
+    private AliyunOssProperties aliyun = new AliyunOssProperties();
     /**
      * s3
      */
-    private S3OssProperties s3;
+    private S3OssProperties s3 = new S3OssProperties();
 }
