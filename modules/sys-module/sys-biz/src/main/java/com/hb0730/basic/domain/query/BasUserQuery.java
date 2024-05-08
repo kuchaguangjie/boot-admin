@@ -46,6 +46,13 @@ public class BasUserQuery extends BaseQuery {
     @Schema(description = "联系电话")
     @Equals
     private String phone;
+
+    /**
+     * 岗位ID
+     */
+    @Query(value = "id", joinName = "posts")
+    @Schema(description = "岗位id")
+    private String postId;
     /**
      * 状态
      */

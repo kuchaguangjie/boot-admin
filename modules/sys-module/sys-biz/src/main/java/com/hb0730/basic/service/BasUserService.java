@@ -12,6 +12,7 @@ import com.hb0730.basic.domain.entity.BasOrg;
 import com.hb0730.basic.domain.entity.BasRole;
 import com.hb0730.basic.domain.entity.BasUser;
 import com.hb0730.basic.domain.query.BasUserQuery;
+import com.hb0730.basic.repository.BasPostRepository;
 import com.hb0730.basic.repository.BasRoleRepository;
 import com.hb0730.basic.repository.BasUserRepository;
 import com.hb0730.basic.service.mapstruct.BasUserMapstruct;
@@ -21,7 +22,6 @@ import com.hb0730.query.jpa.QueryHelper;
 import jakarta.annotation.Resource;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -45,8 +45,12 @@ public class BasUserService extends BaseService<BasUserRepository, BasUser, Stri
     @Resource
     private BasOrgService orgService;
     private final BasUserMapstruct mapstruct;
-    @Autowired
+    @Resource
+    @Lazy
     private BasRoleRepository basRoleRepository;
+    @Resource
+    @Lazy
+    private BasPostRepository basPostRepository;
 
     /**
      * 根据用户名获取租户编码
@@ -179,17 +183,8 @@ public class BasUserService extends BaseService<BasUserRepository, BasUser, Stri
         dto.setUsername(username + "@" + dto.getSysCode());
         BasUser user = mapstruct.toEntity(dto);
         user.setSystem(false);
-        // 保存用户角色
-        List<String> roleIds = dto.getRoleIds();
-        if (CollectionUtil.isNotEmpty(roleIds)) {
-            List<BasRole> roles = basRoleRepository.findAllById(roleIds);
-            user.setRoles(roles);
-        } else {
-            user.setRoles(null);
-        }
-        BasOrg basOrg = new BasOrg();
-        basOrg.setId(orgId);
-        user.setOrg(basOrg);
+        // 关联信息
+        fillRelation(user, dto);
         // 保存用户&角色
         save(user);
     }
@@ -217,17 +212,8 @@ public class BasUserService extends BaseService<BasUserRepository, BasUser, Stri
         dto.setUsername(null);
         BasUser user = mapstruct.toEntity(dto);
         user.setSystem(false);
-        //关联信息
-        List<String> roleIds = dto.getRoleIds();
-        if (CollectionUtil.isNotEmpty(roleIds)) {
-            List<BasRole> roles = basRoleRepository.findAllById(roleIds);
-            user.setRoles(roles);
-        } else {
-            user.setRoles(null);
-        }
-        BasOrg basOrg = new BasOrg();
-        basOrg.setId(orgId);
-        entity.setOrg(basOrg);
+        // 关联信息
+        fillRelation(user, dto);
         BeanUtil.copyProperties(user, entity, CopyOptions.create().setIgnoreNullValue(true));
         // 保存用户&角色
         updateById(entity);
@@ -278,6 +264,30 @@ public class BasUserService extends BaseService<BasUserRepository, BasUser, Stri
         }
         user.setPassword(password);
         updateById(user);
+    }
+
+    /**
+     * 填充关联信息
+     */
+    public void fillRelation(BasUser user, BasUserSaveDto dto) {
+        // 保存用户角色
+        List<String> roleIds = dto.getRoleIds();
+        if (CollectionUtil.isNotEmpty(roleIds)) {
+            List<BasRole> roles = basRoleRepository.findAllById(roleIds);
+            user.setRoles(roles);
+        } else {
+            user.setRoles(null);
+        }
+        // 保存岗位
+        List<String> postIds = dto.getPostIds();
+        if (CollectionUtil.isNotEmpty(postIds)) {
+            user.setPosts(basPostRepository.findAllById(postIds));
+        } else {
+            user.setPosts(null);
+        }
+        BasOrg basOrg = new BasOrg();
+        basOrg.setId(dto.getOrgId());
+        user.setOrg(basOrg);
     }
 
 }

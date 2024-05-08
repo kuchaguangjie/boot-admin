@@ -42,6 +42,8 @@ public class BasUserSaveDto extends BaseDto {
     private String orgId;
     @Schema(description = "角色id")
     private List<String> roleIds;
+    @Schema(description = "岗位id")
+    private List<String> postIds;
     @Schema(description = "系统编码", hidden = true)
     private String sysCode;
 }
