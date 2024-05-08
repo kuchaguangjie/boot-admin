@@ -38,4 +38,10 @@ public class LoginInfoVo implements Serializable {
      */
     @Schema(description = "商户标识")
     private String sysCode;
+
+    /**
+     * 机构信息
+     */
+    @Schema(description = "机构信息")
+    private TenantInfoVo tenantInfo;
 }

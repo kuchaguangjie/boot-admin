@@ -9,7 +9,7 @@
  Target Server Version : 80300 (8.3.0)
  File Encoding         : 65001
 
- Date: 07/05/2024 16:07:13
+ Date: 08/05/2024 10:56:30
 */
 
 SET NAMES utf8mb4;
@@ -46,6 +46,7 @@ CREATE TABLE `bas_organization`
     `id`            varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
     `parent_id`     varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci  DEFAULT NULL COMMENT '父类机构ID',
     `name`          varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '机构名称',
+    `logo`          varchar(255) COLLATE utf8mb4_general_ci                       DEFAULT NULL,
     `product_id`    varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci  DEFAULT NULL COMMENT '产品ID',
     `link_man`      varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci  DEFAULT NULL COMMENT '联系人',
     `link_tel`      varchar(30) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci  DEFAULT NULL COMMENT '联系电话',
@@ -73,12 +74,12 @@ CREATE TABLE `bas_organization`
 -- Records of bas_organization
 -- ----------------------------
 BEGIN;
-INSERT INTO `bas_organization` (`id`, `parent_id`, `name`, `product_id`, `link_man`, `link_tel`, `link_email`,
+INSERT INTO `bas_organization` (`id`, `parent_id`, `name`, `logo`, `product_id`, `link_man`, `link_tel`, `link_email`,
                                 `address`, `used_end_time`, `level`, `path`, `type`, `memo`, `is_system`, `is_saas`,
                                 `is_enabled`, `sys_code`, `created_by`, `created`, `modified_by`, `modified`)
-VALUES ('1785229829122285568', NULL, 'pure-admin科技有限公司', '1785229367733444609', '测试联系人', '13111111111', '',
-        '', NULL, 1, '1785229829122285568', 1, '', b'1', b'1', b'1', 'PA001', 'superadmin', '2024-04-30 16:48:54',
-        'superadmin', '2024-04-30 18:04:44');
+VALUES ('1785229829122285568', NULL, 'pure-admin科技有限公司', 'https://hk-oss.hb0730.me/Y4E3RFXLbAgS-Bh.png',
+        '1785229367733444609', '测试联系人', '13111111111', '', '', NULL, 1, '1785229829122285568', 1, '', b'1', b'1',
+        b'1', 'PA001', 'superadmin', '2024-04-30 16:48:54', 'superadmin', '2024-04-30 18:04:44');
 COMMIT;
 
 -- ----------------------------
@@ -242,17 +243,17 @@ COMMIT;
 DROP TABLE IF EXISTS `bas_post`;
 CREATE TABLE `bas_post`
 (
-    `id`          varchar(32) COLLATE utf8mb4_general_ci NOT NULL,
-    `code`        varchar(32) COLLATE utf8mb4_general_ci NOT NULL COMMENT '岗位编码',
-    `name`        varchar(32) COLLATE utf8mb4_general_ci NOT NULL COMMENT '岗位名称',
-    `description` varchar(255) COLLATE utf8mb4_general_ci                      DEFAULT NULL COMMENT '描述',
-    `sort`        int                                                          DEFAULT NULL COMMENT '排序',
-    `is_enabled`  tinyint                                                      DEFAULT NULL COMMENT '状态',
-    `sys_code`    varchar(32) COLLATE utf8mb4_general_ci NOT NULL COMMENT '商户识别码',
-    `created`     datetime                                                     DEFAULT NULL COMMENT '创建时间',
-    `created_by`  varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL COMMENT '创建者',
-    `modified`    datetime                                                     DEFAULT NULL COMMENT '修改时间',
-    `modified_by` varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL COMMENT '修改时间',
+    `id`          varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+    `code`        varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '岗位编码',
+    `name`        varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '岗位名称',
+    `description` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL COMMENT '描述',
+    `sort`        int                                                           DEFAULT NULL COMMENT '排序',
+    `is_enabled`  tinyint                                                       DEFAULT NULL COMMENT '状态',
+    `sys_code`    varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '商户识别码',
+    `created`     datetime                                                      DEFAULT NULL COMMENT '创建时间',
+    `created_by`  varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci  DEFAULT NULL COMMENT '创建者',
+    `modified`    datetime                                                      DEFAULT NULL COMMENT '修改时间',
+    `modified_by` varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci  DEFAULT NULL COMMENT '修改时间',
     PRIMARY KEY (`id`)
 ) ENGINE = InnoDB
   DEFAULT CHARSET = utf8mb4
@@ -400,7 +401,7 @@ INSERT INTO `bas_user` (`id`, `org_id`, `username`, `password`, `nickname`, `pho
                         `created_by`, `modified`, `modified_by`)
 VALUES ('1785229829181005824', '1785229829122285568', '13111111111',
         '$2a$10$bzGz6zZzAxkN0CRjPf0Pb.CetihWFQo8X6n0oKpZxb1vmxBZVJHIC', '管理员', '13111111111', NULL, NULL, 0,
-        '2024-05-07 15:51:19', NULL, 'PA001', 1, 1, '2024-04-30 16:48:54', 'superadmin', '2024-04-30 18:04:44',
+        '2024-05-08 10:55:43', NULL, 'PA001', 1, 1, '2024-04-30 16:48:54', 'superadmin', '2024-04-30 18:04:44',
         'superadmin');
 COMMIT;
 
@@ -410,8 +411,8 @@ COMMIT;
 DROP TABLE IF EXISTS `bas_user_post`;
 CREATE TABLE `bas_user_post`
 (
-    `user_id`  varchar(32) COLLATE utf8mb4_general_ci                       NOT NULL,
-    `post_id`  varchar(32) COLLATE utf8mb4_general_ci                       NOT NULL,
+    `user_id`  varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+    `post_id`  varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
     `sys_code` varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '商户识别码',
     PRIMARY KEY (`user_id`, `post_id`)
 ) ENGINE = InnoDB
@@ -451,15 +452,15 @@ COMMIT;
 DROP TABLE IF EXISTS `sys_dict`;
 CREATE TABLE `sys_dict`
 (
-    `id`          varchar(32) COLLATE utf8mb4_general_ci NOT NULL,
-    `name`        varchar(32) COLLATE utf8mb4_general_ci NOT NULL COMMENT '字典名称',
-    `type`        varchar(32) COLLATE utf8mb4_general_ci NOT NULL COMMENT '字典类型',
-    `description` varchar(255) COLLATE utf8mb4_general_ci                      DEFAULT NULL COMMENT '描述',
-    `is_enabled`  tinyint(1)                                                   DEFAULT '1' COMMENT '状态',
-    `created`     datetime                                                     DEFAULT NULL COMMENT '创建时间',
-    `created_by`  varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL COMMENT '创建者',
-    `modified`    datetime                                                     DEFAULT NULL COMMENT '修改时间',
-    `modified_by` varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL COMMENT '修改时间',
+    `id`          varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+    `name`        varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '字典名称',
+    `type`        varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '字典类型',
+    `description` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL COMMENT '描述',
+    `is_enabled`  tinyint(1)                                                    DEFAULT '1' COMMENT '状态',
+    `created`     datetime                                                      DEFAULT NULL COMMENT '创建时间',
+    `created_by`  varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci  DEFAULT NULL COMMENT '创建者',
+    `modified`    datetime                                                      DEFAULT NULL COMMENT '修改时间',
+    `modified_by` varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci  DEFAULT NULL COMMENT '修改时间',
     PRIMARY KEY (`id`)
 ) ENGINE = InnoDB
   DEFAULT CHARSET = utf8mb4
@@ -477,18 +478,18 @@ COMMIT;
 DROP TABLE IF EXISTS `sys_dict_item`;
 CREATE TABLE `sys_dict_item`
 (
-    `id`          varchar(32) COLLATE utf8mb4_general_ci NOT NULL,
-    `dict_id`     varchar(32) COLLATE utf8mb4_general_ci NOT NULL COMMENT '字典ID',
-    `dict_type`   varchar(32) COLLATE utf8mb4_general_ci NOT NULL COMMENT '字典类型',
-    `value`       varchar(32) COLLATE utf8mb4_general_ci NOT NULL COMMENT '字典值',
-    `label`       varchar(32) COLLATE utf8mb4_general_ci NOT NULL COMMENT '标签',
-    `sort`        int                                                          DEFAULT NULL COMMENT '排序',
-    `description` varchar(255) COLLATE utf8mb4_general_ci                      DEFAULT NULL COMMENT '描述',
-    `is_enabled`  tinyint(1)                                                   DEFAULT '1' COMMENT '状态',
-    `created`     datetime                                                     DEFAULT NULL COMMENT '创建时间',
-    `created_by`  varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL COMMENT '创建者',
-    `modified`    datetime                                                     DEFAULT NULL COMMENT '修改时间',
-    `modified_by` varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL COMMENT '修改时间',
+    `id`          varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+    `dict_id`     varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '字典ID',
+    `dict_type`   varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '字典类型',
+    `value`       varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '字典值',
+    `label`       varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '标签',
+    `sort`        int                                                           DEFAULT NULL COMMENT '排序',
+    `description` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL COMMENT '描述',
+    `is_enabled`  tinyint(1)                                                    DEFAULT '1' COMMENT '状态',
+    `created`     datetime                                                      DEFAULT NULL COMMENT '创建时间',
+    `created_by`  varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci  DEFAULT NULL COMMENT '创建者',
+    `modified`    datetime                                                      DEFAULT NULL COMMENT '修改时间',
+    `modified_by` varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci  DEFAULT NULL COMMENT '修改时间',
     PRIMARY KEY (`id`)
 ) ENGINE = InnoDB
   DEFAULT CHARSET = utf8mb4
@@ -1223,7 +1224,7 @@ INSERT INTO `sys_user` (`id`, `username`, `nickname`, `password`, `gender`, `ema
                         `last_login_time`, `last_login_ip`, `last_pwd_reset_time`, `description`, `is_system`,
                         `is_enabled`, `created`, `created_by`, `modified`, `modified_by`)
 VALUES ('1', 'superadmin', '管理员', '$2a$10$bzGz6zZzAxkN0CRjPf0Pb.CetihWFQo8X6n0oKpZxb1vmxBZVJHIC', 0, NULL, NULL,
-        NULL, '2024-05-07 15:49:32', NULL, NULL, '租户-超级管理员', 1, 1, '2024-03-23 09:17:46', 'admin', NULL, NULL);
+        NULL, '2024-05-08 10:55:30', NULL, NULL, '租户-超级管理员', 1, 1, '2024-03-23 09:17:46', 'admin', NULL, NULL);
 COMMIT;
 
 -- ----------------------------

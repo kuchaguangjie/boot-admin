@@ -29,6 +29,10 @@ public class TenantDto extends BaseTenantDto {
     @Schema(description = "机构名称")
     private String name;
     /**
+     * logo
+     */
+    private String logo;
+    /**
      * 父机构ID
      */
     @Schema(description = "父机构ID")

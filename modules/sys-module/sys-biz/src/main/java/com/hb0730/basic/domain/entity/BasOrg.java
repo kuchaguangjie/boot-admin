@@ -45,6 +45,10 @@ public class BasOrg extends BaseTenantEntity {
      */
     private String name;
     /**
+     * logo
+     */
+    private String logo;
+    /**
      * 产品
      */
     @OneToOne

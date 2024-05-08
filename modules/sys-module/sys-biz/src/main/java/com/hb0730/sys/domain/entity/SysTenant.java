@@ -43,6 +43,10 @@ public class SysTenant extends BaseTenantEntity {
     @NotBlank(message = "机构名称不能为空")
     private String name;
     /**
+     * logo
+     */
+    private String logo;
+    /**
      * 父机构ID
      */
     private String parentId;

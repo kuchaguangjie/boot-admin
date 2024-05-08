@@ -9,6 +9,7 @@ import com.hb0730.basic.service.BasOrgService;
 import com.hb0730.basic.service.BasPermissionService;
 import com.hb0730.basic.service.BasRoleService;
 import com.hb0730.basic.service.BasUserService;
+import com.hb0730.security.domain.dto.TenantInfoDto;
 import com.hb0730.security.domain.dto.UserInfoDto;
 import com.hb0730.security.domain.dto.UserOrgInfoDto;
 import com.hb0730.sys.domain.entity.SysPermission;
@@ -105,6 +106,11 @@ public class UserLoginService implements com.hb0730.security.service.UserLoginSe
         userInfo.setEnabled(user.getEnabled());
         // 系统编码
         userInfo.setSysCode(null);
+        // 商户
+        TenantInfoDto tenantInfo = new TenantInfoDto();
+        tenantInfo.setName("PureAdmin");
+        tenantInfo.setLogo(null);
+        userInfo.setTenantInfo(tenantInfo);
         return userInfo;
     }
 
@@ -126,6 +132,8 @@ public class UserLoginService implements com.hb0730.security.service.UserLoginSe
         if (null == orgInfo) {
             throw new UsernameNotFoundException("用户未分配机构，无法登录");
         }
+        BasOrg tenantInfo = basOrgService.getTopOrg(orgInfo.getSysCode());
+
         //商户有效期
         basOrgService.checkOrgExpiredForLogin(orgInfo.getId());
         // 角色
@@ -155,6 +163,11 @@ public class UserLoginService implements com.hb0730.security.service.UserLoginSe
         userOrgInfoDto.setName(orgInfo.getName());
         userOrgInfoDto.setPath(orgInfo.getPath());
         userInfo.setOrgInfo(userOrgInfoDto);
+        // 商户信息
+        TenantInfoDto tenantInfoDto = new TenantInfoDto();
+        tenantInfoDto.setName(tenantInfo.getName());
+        tenantInfoDto.setLogo(tenantInfo.getLogo());
+        userInfo.setTenantInfo(tenantInfoDto);
         // 角色
         userInfo.setRoles(getRoles(roles));
         // 权限

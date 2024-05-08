@@ -53,6 +53,10 @@ public class UserInfoDto implements UserDetails {
      */
     private UserOrgInfoDto orgInfo;
     /**
+     * 租户信息
+     */
+    private TenantInfoDto tenantInfo;
+    /**
      * 用户角色
      */
     private List<String> roles;

@@ -35,6 +35,10 @@ public class BasOrgDto extends BaseTenantDto implements TreeUtil.Node<BasOrgDto,
     @NotBlank(message = "机构名称不能为空")
     private String name;
     /**
+     * logo
+     */
+    private String logo;
+    /**
      * 联系人
      */
     @Schema(description = "联系人")
