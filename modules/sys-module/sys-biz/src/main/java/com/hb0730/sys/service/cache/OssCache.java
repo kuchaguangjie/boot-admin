@@ -5,11 +5,13 @@ import com.hb0730.base.utils.JsonUtil;
 import com.hb0730.base.utils.StrUtil;
 import com.hb0730.cache.core.BootAdminCache;
 import com.hb0730.cache.core.CacheUtil;
+import com.hb0730.event.OssRefreshEvent;
 import com.hb0730.sys.domain.entity.SysOssConfig;
 import com.hb0730.sys.repository.SysTenantOssConfigRepository;
 import jakarta.annotation.Resource;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
 
@@ -30,6 +32,9 @@ public class OssCache implements CacheUtil, ApplicationRunner.RefreshCache {
     @Lazy
     @Resource
     private SysTenantOssConfigRepository repository;
+    @Lazy
+    @Resource
+    private ApplicationContext applicationContext;
 
 
     @Getter
@@ -74,6 +79,7 @@ public class OssCache implements CacheUtil, ApplicationRunner.RefreshCache {
         String json = JsonUtil.DEFAULT.toJson(sysOssConfig);
         log.info("设置oss配置缓存:{}", cacheKey);
         cache.setString(cacheKey, json, KeyValue.OSS_CONFIG.getExpire());
+        applicationContext.publishEvent(new OssRefreshEvent(sysCode, this));
     }
 
     /**

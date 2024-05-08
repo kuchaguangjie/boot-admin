@@ -30,6 +30,11 @@
         </dependency>
         <dependency>
             <groupId>com.hb0730</groupId>
+            <artifactId>common-oss</artifactId>
+            <version>${revision}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.hb0730</groupId>
             <artifactId>common-rpc</artifactId>
             <version>${revision}</version>
         </dependency>

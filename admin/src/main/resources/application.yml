@@ -55,6 +55,8 @@ boot:
     opentelemetry:
       rpc:
         enabled: false
+    oss:
+      enabled: false
 
 # springdoc
 springdoc:
