@@ -2,8 +2,7 @@ package com.hb0730.sys.controller;
 
 import com.hb0730.base.R;
 import com.hb0730.common.api.JsfPage;
-import com.hb0730.domain.SelectOptionVO;
-import com.hb0730.security.annotation.AnonymousAccess;
+import com.hb0730.common.domain.SelectOptionVo;
 import com.hb0730.sys.domain.dto.DictDto;
 import com.hb0730.sys.domain.dto.DictItemDto;
 import com.hb0730.sys.domain.query.DictItemQuery;
@@ -135,13 +134,12 @@ public class DictController {
      * @return .
      */
     @GetMapping("/options")
-    @AnonymousAccess
-    @Operation(summary = "查询字典项选项(支持匿名访问)")
+    @Operation(summary = "查询字典项选项")
     @Parameters({
             @io.swagger.v3.oas.annotations.Parameter(name = "type", description = "字典类型", required = true)
     })
-    public R<List<SelectOptionVO>> selectOption(@RequestParam String type) {
-        List<SelectOptionVO> res = dictItemService.selectOption(type);
+    public R<List<SelectOptionVo>> selectOption(@RequestParam String type) {
+        List<SelectOptionVo> res = dictItemService.selectOption(type);
         return R.OK(res);
     }
 

@@ -4,7 +4,7 @@ import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.bean.copier.CopyOptions;
 import com.hb0730.base.exception.ServiceException;
 import com.hb0730.common.api.JsfPage;
-import com.hb0730.domain.SelectOptionVO;
+import com.hb0730.common.domain.SelectOptionVo;
 import com.hb0730.jpa.core.service.BaseService;
 import com.hb0730.query.jpa.QueryHelper;
 import com.hb0730.sys.domain.dto.DictItemDto;
@@ -68,7 +68,7 @@ public class SysDictItemService extends BaseService<SysDictItemRepository, SysDi
      * @param type 字典类型
      * @return 数据
      */
-    public List<SelectOptionVO> selectOption(String type) {
+    public List<SelectOptionVo> selectOption(String type) {
         DictItemQuery query = new DictItemQuery();
         query.setEnabled(true);
         query.setDictType(type);

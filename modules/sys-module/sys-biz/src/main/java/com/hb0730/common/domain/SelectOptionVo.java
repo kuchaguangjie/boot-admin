@@ -1,4 +1,4 @@
-package com.hb0730.domain;
+package com.hb0730.common.domain;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -13,7 +13,7 @@ import java.io.Serializable;
 @Data
 @EqualsAndHashCode
 @ToString
-public class SelectOptionVO implements Serializable {
+public class SelectOptionVo implements Serializable {
     private String label;
     private String value;
 }
