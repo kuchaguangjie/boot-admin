@@ -9,7 +9,7 @@
  Target Server Version : 80300 (8.3.0)
  File Encoding         : 65001
 
- Date: 08/05/2024 10:56:30
+ Date: 09/05/2024 11:57:19
 */
 
 SET NAMES utf8mb4;
@@ -401,7 +401,7 @@ INSERT INTO `bas_user` (`id`, `org_id`, `username`, `password`, `nickname`, `pho
                         `created_by`, `modified`, `modified_by`)
 VALUES ('1785229829181005824', '1785229829122285568', '13111111111',
         '$2a$10$bzGz6zZzAxkN0CRjPf0Pb.CetihWFQo8X6n0oKpZxb1vmxBZVJHIC', '管理员', '13111111111', NULL, NULL, 0,
-        '2024-05-08 10:55:43', NULL, 'PA001', 1, 1, '2024-04-30 16:48:54', 'superadmin', '2024-04-30 18:04:44',
+        '2024-05-09 09:57:33', NULL, 'PA001', 1, 1, '2024-04-30 16:48:54', 'superadmin', '2024-04-30 18:04:44',
         'superadmin');
 COMMIT;
 
@@ -544,6 +544,7 @@ CREATE TABLE `sys_oss_config`
     `endpoint`    varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT 'endpoint',
     `domain`      varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL COMMENT '自定义域名',
     `region`      varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci  DEFAULT NULL COMMENT '区域',
+    `role_arn`    varchar(32) COLLATE utf8mb4_general_ci                        DEFAULT NULL COMMENT '角色ID，用于STS临时授权',
     `sys_code`    varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci  NOT NULL COMMENT '商户识别码',
     `created_by`  varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci  DEFAULT NULL COMMENT '创建者',
     `created`     datetime                                                      DEFAULT NULL COMMENT '创建时间',

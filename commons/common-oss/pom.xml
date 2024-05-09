@@ -32,7 +32,10 @@
         <dependency>
             <groupId>software.amazon.awssdk</groupId>
             <artifactId>s3</artifactId>
-            <optional>true</optional>
+        </dependency>
+        <dependency>
+            <groupId>software.amazon.awssdk</groupId>
+            <artifactId>sts</artifactId>
         </dependency>
         <dependency>
             <groupId>software.amazon.awssdk</groupId>
@@ -43,7 +46,20 @@
         <dependency>
             <groupId>com.aliyun.oss</groupId>
             <artifactId>aliyun-sdk-oss</artifactId>
-            <optional>true</optional>
+            <exclusions>
+                <exclusion>
+                    <groupId>io.opentracing</groupId>
+                    <artifactId>opentracing-noop</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>io.opentracing</groupId>
+                    <artifactId>opentracing-api</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>io.opentracing</groupId>
+                    <artifactId>opentracing-util</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <!--Java 9及以上 JAXB相关依赖-->
         <dependency>

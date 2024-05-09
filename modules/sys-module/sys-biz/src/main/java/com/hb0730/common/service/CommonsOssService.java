@@ -78,11 +78,13 @@ public class CommonsOssService {
         switch (Objects.requireNonNull(ossTypeEnums)) {
             case ALIYUN:
                 AliyunOssProperties properties = BeanUtil.toBean(dto, AliyunOssProperties.class);
+                properties.setRoleSessionName(dto.getSysCode());
                 storage = new AliyunOssStorage(properties);
                 OssFactory.registerStorage(dto.getSysCode(), storage);
                 break;
             case S3:
                 S3OssProperties ossProperties = BeanUtil.toBean(dto, S3OssProperties.class);
+                ossProperties.setRoleSessionName(dto.getSysCode());
                 storage = new S3OssStorage(ossProperties);
                 OssFactory.registerStorage(dto.getSysCode(), storage);
                 break;

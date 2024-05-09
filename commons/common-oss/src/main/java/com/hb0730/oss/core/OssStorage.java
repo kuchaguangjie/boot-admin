@@ -1,5 +1,8 @@
 package com.hb0730.oss.core;
 
+import com.hb0730.base.exception.OssException;
+import lombok.Data;
+
 import java.io.File;
 import java.io.InputStream;
 
@@ -121,4 +124,35 @@ public interface OssStorage extends OssStorageInit {
      * @return url
      */
     String getShareUrl(String objectKey, String bucketName, long expires);
+
+    /**
+     * 获取临时访问凭证,默认10分钟
+     *
+     * @return 临时访问凭证
+     */
+    default OssStsToken getStsToken() {
+        return getStsToken(3600);
+    }
+
+
+    /**
+     * 获取临时访问凭证
+     *
+     * @param expires 过期时间，单位秒
+     * @return 临时访问凭证
+     */
+    default OssStsToken getStsToken(long expires) {
+        throw new OssException("not support, please override this method");
+    }
+
+    /**
+     * 临时访问凭证
+     */
+    @Data
+    static class OssStsToken {
+        private String accessKey;
+        private String accessSecret;
+        private String securityToken;
+        private String expiration;
+    }
 }

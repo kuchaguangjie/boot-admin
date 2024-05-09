@@ -39,7 +39,7 @@
         <guava.version>32.0.0-jre</guava.version>
         <jwt.version>4.4.0</jwt.version>
         <s3.version>2.25.27</s3.version>
-        <aliyun-sdk-oss.version>3.15.2</aliyun-sdk-oss.version>
+        <aliyun-sdk-oss.version>3.17.2</aliyun-sdk-oss.version>
         <jaxb-api.version>2.3.1</jaxb-api.version>
         <javax-activation.version>1.1.1</javax-activation.version>
     </properties>
@@ -172,6 +172,11 @@
             <dependency>
                 <groupId>software.amazon.awssdk</groupId>
                 <artifactId>s3</artifactId>
+                <version>${s3.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>software.amazon.awssdk</groupId>
+                <artifactId>sts</artifactId>
                 <version>${s3.version}</version>
             </dependency>
             <dependency>

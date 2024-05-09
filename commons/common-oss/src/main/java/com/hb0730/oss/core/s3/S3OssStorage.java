@@ -14,6 +14,8 @@ import software.amazon.awssdk.services.s3.S3Client;
 import software.amazon.awssdk.services.s3.S3Configuration;
 import software.amazon.awssdk.services.s3.model.GetObjectResponse;
 import software.amazon.awssdk.services.s3.presigner.S3Presigner;
+import software.amazon.awssdk.services.sts.StsClient;
+import software.amazon.awssdk.services.sts.model.AssumeRoleResponse;
 
 import java.io.File;
 import java.io.InputStream;
@@ -30,7 +32,7 @@ import java.time.Duration;
  */
 @Slf4j
 public class S3OssStorage extends AbstractOssStorage {
-    private S3Client s3Client;
+    private volatile S3Client s3Client;
     @Setter
     @Getter
     private S3OssProperties ossProperties;
@@ -55,7 +57,7 @@ public class S3OssStorage extends AbstractOssStorage {
     public void removeObject(String objectKey, String bucketName) {
         has(bucketName, "bucketName is null")
                 .has(objectKey, "objectKey is null");
-        s3Client.deleteObject(builder -> builder.bucket(bucketName).key(objectKey));
+        _getOssClient().deleteObject(builder -> builder.bucket(bucketName).key(objectKey));
         log.info("delete object success, bucketName: {}, objectKey: {}", bucketName, objectKey);
     }
 
@@ -79,8 +81,7 @@ public class S3OssStorage extends AbstractOssStorage {
         has(file, "file is null")
                 .has(objectKey, "objectKey is null")
                 .has(bucketName, "bucketName is null");
-
-        s3Client.putObject(
+        _getOssClient().putObject(
                 builder -> builder.bucket(bucketName).key(objectKey).build(),
                 RequestBody.fromFile(file)
         );
@@ -107,12 +108,11 @@ public class S3OssStorage extends AbstractOssStorage {
         has(stream, "stream is null")
                 .has(objectKey, "objectKey is null")
                 .has(bucketName, "bucketName is null");
-
         // bucket exist
         checkBucket(bucketName);
         try {
 
-            s3Client.putObject(builder -> builder.bucket(bucketName).key(objectKey).build(),
+            _getOssClient().putObject(builder -> builder.bucket(bucketName).key(objectKey).build(),
                     RequestBody.fromInputStream(stream, stream.available()));
             return ossProperties.getAccessUrl(objectKey);
         } catch (Exception e) {
@@ -131,7 +131,7 @@ public class S3OssStorage extends AbstractOssStorage {
         has(objectKey, "objectKey is null")
                 .has(bucketName, "bucketName is null");
         try {
-            ResponseBytes<GetObjectResponse> responseBytes = s3Client.getObjectAsBytes(
+            ResponseBytes<GetObjectResponse> responseBytes = _getOssClient().getObjectAsBytes(
                     builder -> builder.bucket(bucketName).key(objectKey)
             );
             return responseBytes.asInputStream();
@@ -167,6 +167,25 @@ public class S3OssStorage extends AbstractOssStorage {
     }
 
     @Override
+    public OssStsToken getStsToken(long expires) {
+        try (StsClient stsClient = buildStsClient()) {
+            AssumeRoleResponse roleResponse = stsClient.assumeRole(builder ->
+                    builder.roleArn(ossProperties.getRoleArn())
+                            .roleSessionName(ossProperties.getRoleSessionName())
+                            .durationSeconds((int) expires));
+            OssStsToken ossStsToken = new OssStsToken();
+            ossStsToken.setAccessKey(roleResponse.credentials().accessKeyId());
+            ossStsToken.setAccessSecret(roleResponse.credentials().secretAccessKey());
+            ossStsToken.setSecurityToken(roleResponse.credentials().sessionToken());
+            return ossStsToken;
+
+        } catch (Exception e) {
+            log.error("get sts token error", e);
+            throw new OssException("get sts token error", e);
+        }
+    }
+
+    @Override
     @SuppressWarnings("unchecked")
     public <T> T getClient() {
         return (T) this.s3Client;
@@ -174,7 +193,21 @@ public class S3OssStorage extends AbstractOssStorage {
 
     @Override
     public void init() {
-        this.s3Client = buildClient();
+        //双重检查，保证线程安全
+        if (s3Client == null) {
+            synchronized (this) {
+                if (s3Client == null) {
+                    s3Client = buildClient();
+                }
+            }
+        }
+    }
+
+    private S3Client _getOssClient() {
+        if (null == s3Client) {
+            init();
+        }
+        return s3Client;
     }
 
     /**
@@ -185,10 +218,10 @@ public class S3OssStorage extends AbstractOssStorage {
     private void checkBucket(String bucketName) {
         has(bucketName, "bucketName is null");
         try {
-            s3Client.headBucket(builder -> builder.bucket(bucketName));
+            _getOssClient().headBucket(builder -> builder.bucket(bucketName));
         } catch (Exception ignored) {
-            s3Client.createBucket(builder -> builder.bucket(bucketName));
-            s3Client.putBucketPolicy(builder -> builder.bucket(bucketName).policy(ossProperties.getBucketPolicy()));
+            _getOssClient().createBucket(builder -> builder.bucket(bucketName));
+            _getOssClient().putBucketPolicy(builder -> builder.bucket(bucketName).policy(ossProperties.getBucketPolicy()));
         }
     }
 
@@ -219,8 +252,6 @@ public class S3OssStorage extends AbstractOssStorage {
                         URI.create(ossProperties.getEndpointProtocol() + "://" + ossProperties.getEndpoint())
                 )
                 .region(Region.of(ossProperties.getRegion()))
-                .credentialsProvider(() -> AwsBasicCredentials.create(ossProperties.getAccessKey(),
-                        ossProperties.getAccessKey()))
                 .credentialsProvider(
                         () -> AwsBasicCredentials.create(ossProperties.getAccessKey(), ossProperties.getSecretKey())
                 )
@@ -230,6 +261,15 @@ public class S3OssStorage extends AbstractOssStorage {
                                 .chunkedEncodingEnabled(false)
                                 .pathStyleAccessEnabled(ossProperties.isPathStyleAccess())
                                 .build()
+                )
+                .build();
+    }
+
+    private StsClient buildStsClient() {
+        return StsClient.builder()
+                .region(Region.of(ossProperties.getRegion()))
+                .credentialsProvider(
+                        () -> AwsBasicCredentials.create(ossProperties.getAccessKey(), ossProperties.getSecretKey())
                 )
                 .build();
     }

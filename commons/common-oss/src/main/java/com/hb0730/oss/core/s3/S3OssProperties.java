@@ -38,7 +38,7 @@ public class S3OssProperties implements OssProperties {
     /**
      * 区域
      */
-    private String region;
+    private String region = "Auto";
     /**
      * endpoint
      */
@@ -61,4 +61,13 @@ public class S3OssProperties implements OssProperties {
      * bucketPolicy
      */
     private String bucketPolicy = "Policy";
+    /*=================STS相关参数====================*/
+    /**
+     * STS角色 ID
+     */
+    private String roleArn;
+    /**
+     * STS角色会话名称
+     */
+    private String roleSessionName;
 }

@@ -2,6 +2,7 @@ package com.hb0730.web.exception;
 
 import cn.hutool.core.util.ObjectUtil;
 import com.hb0730.base.R;
+import com.hb0730.base.exception.OssException;
 import com.hb0730.base.exception.ServiceException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.ConstraintViolationException;
@@ -34,6 +35,15 @@ public class GlobalExceptionHandler {
         log.error(e.getMessage(), e);
         Integer code = e.getCode();
         return ObjectUtil.isNotNull(code) ? R.NG(code, e.getMessage()) : R.NG(e.getMessage());
+    }
+
+    /**
+     * oss异常
+     */
+    @ExceptionHandler(OssException.class)
+    public R<Void> handleOssException(OssException e) {
+        log.error("oss异常：{}", e.getMessage(), e);
+        return R.NG(e.getMessage());
     }
 
     /**

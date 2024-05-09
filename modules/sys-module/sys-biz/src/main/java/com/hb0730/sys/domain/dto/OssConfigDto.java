@@ -65,4 +65,10 @@ public class OssConfigDto extends BaseTenantDto {
      */
     @Schema(description = "区域")
     private String region;
+
+    /**
+     * 角色ID,用于STS临时授权
+     */
+    @Schema(description = "角色ID,用于STS临时授权")
+    private String roleArn;
 }

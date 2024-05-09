@@ -67,4 +67,8 @@ public class SysOssConfig extends BaseEntity {
      * 商户编码
      */
     private String sysCode;
+    /**
+     * 角色ID,用于STS临时授权
+     */
+    private String roleArn;
 }

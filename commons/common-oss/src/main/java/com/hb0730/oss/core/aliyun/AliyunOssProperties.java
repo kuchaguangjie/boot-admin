@@ -50,4 +50,15 @@ public class AliyunOssProperties implements OssProperties {
      */
     private String customDomain;
 
+    /*=================STS相关参数====================*/
+    /**
+     * STS角色 ID
+     */
+    private String roleArn;
+    /**
+     * STS角色会话名称
+     */
+    private String roleSessionName;
+
+
 }
