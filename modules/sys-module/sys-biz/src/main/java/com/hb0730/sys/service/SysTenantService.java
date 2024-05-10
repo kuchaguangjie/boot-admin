@@ -226,6 +226,9 @@ public class SysTenantService extends BaseService<SysTenantRepository, SysTenant
         organization.setSysCode(dto.getSysCode());
         // 商户名称
         organization.setName(dto.getName());
+        // 商户logo
+        organization.setLogo(dto.getLogo());
+        
         organization.setParentId(null);
         // 联系人
         organization.setLinkMan(dto.getLinkMan());

@@ -34,6 +34,11 @@ public class TenantSmallDto extends BaseDto {
     @Schema(description = "商户名称")
     private String name;
     /**
+     * 机构logo
+     */
+    @Schema(description = "机构logo")
+    private String logo;
+    /**
      * 联系人
      */
     @Schema(description = "联系人")
