@@ -38,6 +38,10 @@ public class AliyunOssProperties implements OssProperties {
      */
     private String endpoint;
     /**
+     * 协议
+     */
+    private Protocol endpointProtocol = Protocol.HTTPS;
+    /**
      * endpoint 策略,默认 `public-read` 公共读
      */
     private String endpointPolicy = "public-read";

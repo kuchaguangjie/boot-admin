@@ -2,9 +2,11 @@ package com.hb0730.oss.core.aliyun;
 
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.net.URLDecoder;
+import com.aliyun.oss.ClientConfiguration;
 import com.aliyun.oss.OSSClient;
 import com.aliyun.oss.OSSClientBuilder;
 import com.aliyun.oss.common.auth.DefaultCredentialProvider;
+import com.aliyun.oss.common.comm.Protocol;
 import com.aliyun.oss.model.CannedAccessControlList;
 import com.aliyun.oss.model.GeneratePresignedUrlRequest;
 import com.aliyun.oss.model.OSSObject;
@@ -16,6 +18,7 @@ import com.aliyuncs.profile.DefaultProfile;
 import com.hb0730.base.exception.OssException;
 import com.hb0730.base.utils.StrUtil;
 import com.hb0730.oss.core.AbstractOssStorage;
+import com.hb0730.oss.core.OssProperties;
 import lombok.extern.slf4j.Slf4j;
 
 import java.io.BufferedInputStream;
@@ -294,6 +297,12 @@ public class AliyunOssStorage extends AbstractOssStorage {
     }
 
     private OSSClient buildClient() {
+        ClientConfiguration clientConfiguration = new ClientConfiguration();
+        clientConfiguration.setProtocol(
+                ossProperties.getEndpointProtocol() == OssProperties.Protocol.HTTPS ?
+                        Protocol.HTTPS : Protocol.HTTP
+        );
+
         return (OSSClient) OSSClientBuilder
                 .create()
                 .region(ossProperties.getRegion())
@@ -303,6 +312,7 @@ public class AliyunOssStorage extends AbstractOssStorage {
                                 ossProperties.getAccessKey(),
                                 ossProperties.getSecretKey())
                 )
+                .clientConfiguration(clientConfiguration)
                 .build();
     }
 }
