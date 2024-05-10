@@ -9,7 +9,7 @@
  Target Server Version : 80300 (8.3.0)
  File Encoding         : 65001
 
- Date: 09/05/2024 11:57:19
+ Date: 10/05/2024 11:34:58
 */
 
 SET NAMES utf8mb4;
@@ -77,9 +77,10 @@ BEGIN;
 INSERT INTO `bas_organization` (`id`, `parent_id`, `name`, `logo`, `product_id`, `link_man`, `link_tel`, `link_email`,
                                 `address`, `used_end_time`, `level`, `path`, `type`, `memo`, `is_system`, `is_saas`,
                                 `is_enabled`, `sys_code`, `created_by`, `created`, `modified_by`, `modified`)
-VALUES ('1785229829122285568', NULL, 'pure-admin科技有限公司', 'https://hk-oss.hb0730.me/Y4E3RFXLbAgS-Bh.png',
-        '1785229367733444609', '测试联系人', '13111111111', '', '', NULL, 1, '1785229829122285568', 1, '', b'1', b'1',
-        b'1', 'PA001', 'superadmin', '2024-04-30 16:48:54', 'superadmin', '2024-04-30 18:04:44');
+VALUES ('1785229829122285568', NULL, 'pure-admin科技有限公司',
+        'https://hk-oss.hb0730.me/Y4E3RFXLbAgS-Bh_1715311088593.png', '1785229367733444609', '测试联系人',
+        '13111111111', '', '', NULL, 1, '1785229829122285568', 1, '', b'1', b'1', b'1', 'PA001', 'superadmin',
+        '2024-04-30 16:48:54', 'superadmin', '2024-05-10 11:18:13');
 COMMIT;
 
 -- ----------------------------
@@ -401,7 +402,7 @@ INSERT INTO `bas_user` (`id`, `org_id`, `username`, `password`, `nickname`, `pho
                         `created_by`, `modified`, `modified_by`)
 VALUES ('1785229829181005824', '1785229829122285568', '13111111111',
         '$2a$10$bzGz6zZzAxkN0CRjPf0Pb.CetihWFQo8X6n0oKpZxb1vmxBZVJHIC', '管理员', '13111111111', NULL, NULL, 0,
-        '2024-05-09 09:57:33', NULL, 'PA001', 1, 1, '2024-04-30 16:48:54', 'superadmin', '2024-04-30 18:04:44',
+        '2024-05-10 09:09:47', NULL, 'PA001', 1, 1, '2024-04-30 16:48:54', 'superadmin', '2024-04-30 18:04:44',
         'superadmin');
 COMMIT;
 
@@ -444,6 +445,33 @@ CREATE TABLE `bas_user_role`
 BEGIN;
 INSERT INTO `bas_user_role` (`role_id`, `user_id`)
 VALUES ('1785229829160034304', '1785229829181005824');
+COMMIT;
+
+-- ----------------------------
+-- Table structure for sys_attachment
+-- ----------------------------
+DROP TABLE IF EXISTS `sys_attachment`;
+CREATE TABLE `sys_attachment`
+(
+    `id`           varchar(32) COLLATE utf8mb4_general_ci NOT NULL,
+    `display_name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL COMMENT '名称',
+    `media_type`   varchar(32) COLLATE utf8mb4_general_ci                        DEFAULT NULL COMMENT '类型',
+    `size`         bigint                                                        DEFAULT NULL COMMENT '大小',
+    `permalink`    varchar(255) COLLATE utf8mb4_general_ci                       DEFAULT NULL COMMENT '链接',
+    `sys_code`     varchar(32) COLLATE utf8mb4_general_ci                        DEFAULT NULL COMMENT '商户',
+    `created`      datetime                                                      DEFAULT NULL COMMENT '创建时间',
+    `created_by`   varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci  DEFAULT NULL COMMENT '创建者',
+    `modified`     datetime                                                      DEFAULT NULL COMMENT '修改时间',
+    `modified_by`  varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci  DEFAULT NULL COMMENT '修改时间',
+    PRIMARY KEY (`id`)
+) ENGINE = InnoDB
+  DEFAULT CHARSET = utf8mb4
+  COLLATE = utf8mb4_general_ci COMMENT ='管理端/商户端：附加管理';
+
+-- ----------------------------
+-- Records of sys_attachment
+-- ----------------------------
+BEGIN;
 COMMIT;
 
 -- ----------------------------
@@ -1225,7 +1253,7 @@ INSERT INTO `sys_user` (`id`, `username`, `nickname`, `password`, `gender`, `ema
                         `last_login_time`, `last_login_ip`, `last_pwd_reset_time`, `description`, `is_system`,
                         `is_enabled`, `created`, `created_by`, `modified`, `modified_by`)
 VALUES ('1', 'superadmin', '管理员', '$2a$10$bzGz6zZzAxkN0CRjPf0Pb.CetihWFQo8X6n0oKpZxb1vmxBZVJHIC', 0, NULL, NULL,
-        NULL, '2024-05-08 10:55:30', NULL, NULL, '租户-超级管理员', 1, 1, '2024-03-23 09:17:46', 'admin', NULL, NULL);
+        NULL, '2024-05-10 10:17:58', NULL, NULL, '租户-超级管理员', 1, 1, '2024-03-23 09:17:46', 'admin', NULL, NULL);
 COMMIT;
 
 -- ----------------------------
