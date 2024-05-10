@@ -2,6 +2,7 @@ package com.hb0730.oss.core.s3;
 
 import cn.hutool.core.net.URLDecoder;
 import com.hb0730.base.exception.OssException;
+import com.hb0730.base.utils.StrUtil;
 import com.hb0730.oss.core.AbstractOssStorage;
 import lombok.Getter;
 import lombok.Setter;
@@ -13,6 +14,7 @@ import software.amazon.awssdk.regions.Region;
 import software.amazon.awssdk.services.s3.S3Client;
 import software.amazon.awssdk.services.s3.S3Configuration;
 import software.amazon.awssdk.services.s3.model.GetObjectResponse;
+import software.amazon.awssdk.services.s3.model.PutObjectRequest;
 import software.amazon.awssdk.services.s3.presigner.S3Presigner;
 import software.amazon.awssdk.services.sts.StsClient;
 import software.amazon.awssdk.services.sts.model.AssumeRoleResponse;
@@ -23,6 +25,7 @@ import java.net.URI;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.time.Duration;
+import java.util.Map;
 
 /**
  * S3 Client
@@ -48,7 +51,7 @@ public class S3OssStorage extends AbstractOssStorage {
     @Override
     public void deleteUrl(String accessUrl) {
         has(accessUrl, "accessUrl is null");
-        String objectKey = ossProperties.getObjectKey(accessUrl);
+        String objectKey = ossProperties.renameObjectKey(accessUrl);
         has(objectKey, "objectKey is null");
         removeObject(ossProperties.getBucketName(), objectKey);
     }
@@ -65,14 +68,12 @@ public class S3OssStorage extends AbstractOssStorage {
     public String uploadFile(File file) {
         has(file, "file is null")
                 .has(ossProperties, "ossProperties is null");
-        String objectKey = ossProperties.getObjectKey(file, "");
+        String objectKey = ossProperties.renameObjectKey(file, "");
         return uploadFile(objectKey, file);
     }
 
     @Override
     public String uploadFile(String objectKey, File file) {
-        has(file, "file is null")
-                .has(objectKey, "objectName is null");
         return uploadFile(objectKey, ossProperties.getBucketName(), file);
     }
 
@@ -81,39 +82,57 @@ public class S3OssStorage extends AbstractOssStorage {
         has(file, "file is null")
                 .has(objectKey, "objectKey is null")
                 .has(bucketName, "bucketName is null");
-        _getOssClient().putObject(
-                builder -> builder.bucket(bucketName).key(objectKey).build(),
-                RequestBody.fromFile(file)
-        );
-        return ossProperties.getAccessUrl(objectKey);
+        try {
+            _getOssClient().putObject(
+                    builder -> builder.bucket(bucketName).key(objectKey).build(),
+                    RequestBody.fromFile(file)
+            );
+            return ossProperties.getAccessUrl(objectKey);
+        } catch (Exception e) {
+            log.error("upload file error", e);
+            throw new OssException("upload file error", e);
+        }
 
     }
 
     @Override
     public String upload(String objectKey, InputStream stream) {
-        has(stream, "stream is null")
-                .has(objectKey, "objectKey is null");
         return upload(objectKey, ossProperties.getBucketName(), stream);
     }
 
     @Override
     public String upload(String objectKey, String bucketName, InputStream stream) {
-        has(stream, "stream is null")
-                .has(objectKey, "objectKey is null")
-                .has(bucketName, "bucketName is null");
-        return doUpload(objectKey, bucketName, stream);
+        return doUpload(objectKey, bucketName, -1, "", stream);
     }
 
-    protected String doUpload(String objectKey, String bucketName, InputStream stream) {
+    @Override
+    public String upload(String objectKey, long contentLength, String contentType, InputStream stream) {
+        return doUpload(objectKey, ossProperties.getBucketName(), contentLength, contentType, stream);
+    }
+
+    /**
+     * 上传文件
+     *
+     * @param objectKey     objectKey
+     * @param bucketName    bucketName
+     * @param contentLength 文件大小
+     * @param contentType   文件类型
+     * @param stream        文件流
+     * @return accessUrl
+     */
+    protected String doUpload(String objectKey, String bucketName, long contentLength,
+                              String contentType, InputStream stream) {
         has(stream, "stream is null")
                 .has(objectKey, "objectKey is null")
                 .has(bucketName, "bucketName is null");
         // bucket exist
         checkBucket(bucketName);
         try {
+            contentLength = contentLength <= 0 ? stream.available() : contentLength;
+            contentType = StrUtil.isBlank(contentType) ? "application/octet-stream" : contentType;
 
             _getOssClient().putObject(builder -> builder.bucket(bucketName).key(objectKey).build(),
-                    RequestBody.fromInputStream(stream, stream.available()));
+                    RequestBody.fromContentProvider(() -> stream, contentLength, contentType));
             return ossProperties.getAccessUrl(objectKey);
         } catch (Exception e) {
             log.error("upload file error", e);
@@ -177,11 +196,40 @@ public class S3OssStorage extends AbstractOssStorage {
             ossStsToken.setAccessKey(roleResponse.credentials().accessKeyId());
             ossStsToken.setAccessSecret(roleResponse.credentials().secretAccessKey());
             ossStsToken.setSecurityToken(roleResponse.credentials().sessionToken());
+            ossStsToken.setBucketName(ossProperties.getBucketName());
             return ossStsToken;
 
         } catch (Exception e) {
             log.error("get sts token error", e);
             throw new OssException("get sts token error", e);
+        }
+    }
+
+    @Override
+    public PresignedUrl getPresignedUrl(String objectKey, long expires, Map<String, String> headers) {
+        has(objectKey, "objectKey is null");
+        try (S3Presigner s3Presigner = buildS3Presigner()) {
+            PutObjectRequest.Builder putObjectRequest = PutObjectRequest.builder()
+                    .bucket(ossProperties.getBucketName())
+                    .key(objectKey);
+            if (null != headers) {
+                String contentType = headers.get("Content-Type");
+                if (StrUtil.isNotBlank(contentType)) {
+                    putObjectRequest.contentType(contentType);
+                }
+            }
+            URL url = s3Presigner.presignPutObject(
+                            builder -> builder
+                                    .putObjectRequest(
+                                            putObjectRequest.build()
+                                    )
+                                    .signatureDuration(Duration.ofSeconds(expires)))
+                    .url();
+            String presignedUrl = URLDecoder.decode(url.toString(), StandardCharsets.UTF_8);
+            return new PresignedUrl(presignedUrl, ossProperties.getAccessUrl(objectKey));
+        } catch (Exception e) {
+            log.error("get presigned url error", e);
+            throw new OssException("get presigned url error", e);
         }
     }
 
@@ -220,8 +268,8 @@ public class S3OssStorage extends AbstractOssStorage {
         try {
             _getOssClient().headBucket(builder -> builder.bucket(bucketName));
         } catch (Exception ignored) {
-            _getOssClient().createBucket(builder -> builder.bucket(bucketName));
-            _getOssClient().putBucketPolicy(builder -> builder.bucket(bucketName).policy(ossProperties.getBucketPolicy()));
+            s3Client.createBucket(builder -> builder.bucket(bucketName));
+            s3Client.putBucketPolicy(builder -> builder.bucket(bucketName).policy(ossProperties.getBucketPolicy()));
         }
     }
 

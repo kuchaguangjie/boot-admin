@@ -1,10 +1,13 @@
 package com.hb0730.oss.core;
 
 import com.hb0730.base.exception.OssException;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.io.File;
 import java.io.InputStream;
+import java.util.Map;
 
 /**
  * OSS 存储
@@ -57,6 +60,18 @@ public interface OssStorage extends OssStorageInit {
      * @throws RuntimeException 异常
      */
     String uploadFile(String objectKey, String bucketName, File file);
+
+    /**
+     * 上传文件
+     *
+     * @param objectKey     objectKey
+     * @param contentLength 文件大小,如果不知道大小，传-1
+     * @param contentType   文件类型,默认 <code>application/octet-stream</code>
+     * @param stream        文件流
+     * @return accessUrl
+     * @throws RuntimeException 异常
+     */
+    String upload(String objectKey, long contentLength, String contentType, InputStream stream);
 
     /**
      * 上传文件
@@ -146,6 +161,37 @@ public interface OssStorage extends OssStorageInit {
     }
 
     /**
+     * 获得文件预签名地址，默认3分钟
+     *
+     * @param objectKey 对象key
+     * @return .
+     */
+    default PresignedUrl getPresignedUrl(String objectKey) {
+        return getPresignedUrl(objectKey, 3600, null);
+    }
+
+    /**
+     * 获得文件预签名地址，默认3分钟
+     *
+     * @param objectKey 对象key
+     * @return .
+     */
+    default PresignedUrl getPresignedUrl(String objectKey, Map<String, String> heads) {
+        return getPresignedUrl(objectKey, 3600, heads);
+    }
+
+    /**
+     * 获得文件预签名地址
+     *
+     * @param objectKey 对象key
+     * @param expires   过期时间,单位秒
+     * @return .
+     */
+    default PresignedUrl getPresignedUrl(String objectKey, long expires, Map<String, String> heads) {
+        throw new OssException("not support, please override this method");
+    }
+
+    /**
      * 临时访问凭证
      */
     @Data
@@ -154,5 +200,23 @@ public interface OssStorage extends OssStorageInit {
         private String accessSecret;
         private String securityToken;
         private String expiration;
+        private String bucketName;
+    }
+
+    /**
+     * 预签名URL
+     */
+    @Data
+    @AllArgsConstructor
+    @NoArgsConstructor
+    static class PresignedUrl {
+        /**
+         * 预签名URL
+         */
+        private String presignedUrl;
+        /**
+         * 访问URL
+         */
+        private String accessUrl;
     }
 }

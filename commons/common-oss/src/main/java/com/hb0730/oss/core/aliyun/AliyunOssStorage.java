@@ -6,6 +6,7 @@ import com.aliyun.oss.OSSClient;
 import com.aliyun.oss.OSSClientBuilder;
 import com.aliyun.oss.common.auth.DefaultCredentialProvider;
 import com.aliyun.oss.model.CannedAccessControlList;
+import com.aliyun.oss.model.GeneratePresignedUrlRequest;
 import com.aliyun.oss.model.OSSObject;
 import com.aliyun.oss.model.ObjectMetadata;
 import com.aliyuncs.DefaultAcsClient;
@@ -13,6 +14,7 @@ import com.aliyuncs.auth.sts.AssumeRoleRequest;
 import com.aliyuncs.auth.sts.AssumeRoleResponse;
 import com.aliyuncs.profile.DefaultProfile;
 import com.hb0730.base.exception.OssException;
+import com.hb0730.base.utils.StrUtil;
 import com.hb0730.oss.core.AbstractOssStorage;
 import lombok.extern.slf4j.Slf4j;
 
@@ -22,6 +24,8 @@ import java.io.InputStream;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.util.Calendar;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * 阿里云OSS 存储
@@ -52,7 +56,7 @@ public class AliyunOssStorage extends AbstractOssStorage {
     public void deleteUrl(String accessUrl) {
         has(accessUrl, "accessUrl is null");
         has(ossProperties, "ossProperties is null");
-        String objectKey = ossProperties.getObjectKey(accessUrl);
+        String objectKey = ossProperties.renameObjectKey(accessUrl);
         if (objectKey != null) {
             _getOssClient().deleteObject(ossProperties.getBucketName(), objectKey);
         }
@@ -70,14 +74,12 @@ public class AliyunOssStorage extends AbstractOssStorage {
     public String uploadFile(File file) {
         has(file, "file is null")
                 .has(ossProperties, "ossProperties is null");
-        String objectKey = ossProperties.getObjectKey(file, "");
+        String objectKey = ossProperties.renameObjectKey(file, "");
         return uploadFile(objectKey, file);
     }
 
     @Override
     public String uploadFile(String objectKey, File file) {
-        has(objectKey, "objectKey is null")
-                .has(file, "file is null");
         return uploadFile(objectKey, ossProperties.getBucketName(), file);
     }
 
@@ -86,40 +88,55 @@ public class AliyunOssStorage extends AbstractOssStorage {
         has(objectKey, "objectKey is null")
                 .has(bucketName, "bucketName is null")
                 .has(file, "file is null");
-        checkBucket(bucketName);
-        // 上传文件
-        ObjectMetadata metadata = new ObjectMetadata();
-        metadata.setContentLength(file.length());
-        metadata.setContentType(getFileMimeType(file.getName()));
-        _getOssClient().putObject(bucketName, objectKey, file, metadata);
-        log.info("upload file success, bucketName:{}, objectKey:{}", bucketName, objectKey);
-        return ossProperties.getAccessUrl(objectKey);
-
+        try {
+            checkBucket(bucketName);
+            // 上传文件
+            ObjectMetadata metadata = new ObjectMetadata();
+            metadata.setContentLength(file.length());
+            metadata.setContentType(getFileMimeType(file.getName()));
+            _getOssClient().putObject(bucketName, objectKey, file, metadata);
+            log.info("upload file success, bucketName:{}, objectKey:{}", bucketName, objectKey);
+            return ossProperties.getAccessUrl(objectKey);
+        } catch (Exception e) {
+            log.error("upload file error", e);
+            throw new OssException("upload file error", e);
+        }
     }
 
     @Override
     public String upload(String objectKey, InputStream stream) {
-        has(objectKey, "objectKey is null")
-                .has(stream, "stream is null");
         return upload(objectKey, ossProperties.getBucketName(), stream);
     }
 
     @Override
     public String upload(String objectKey, String bucketName, InputStream stream) {
-        has(objectKey, "objectKey is null")
-                .has(bucketName, "bucketName is null")
-                .has(stream, "stream is null");
-        return doUpload(objectKey, bucketName, stream);
+        return doUpload(objectKey, bucketName, -1, "", stream);
     }
 
-    protected String doUpload(String objectKey, String bucketName, InputStream stream) {
+    @Override
+    public String upload(String objectKey, long contentLength, String contentType, InputStream stream) {
+        return doUpload(objectKey, ossProperties.getBucketName(), contentLength, contentType, stream);
+    }
+
+    protected String doUpload(String objectKey, String bucketName, long contentLength,
+                              String contentType, InputStream stream) {
         has(objectKey, "objectKey is null")
                 .has(bucketName, "bucketName is null")
                 .has(stream, "stream is null");
-
-        _getOssClient().putObject(bucketName, objectKey, stream);
-        log.info("upload file success, bucketName:{}, objectKey:{}", bucketName, objectKey);
-        return ossProperties.getAccessUrl(objectKey);
+        try {
+            checkBucket(bucketName);
+            contentLength = contentLength <= 0 ? stream.available() : contentLength;
+            contentType = StrUtil.isBlank(contentType) ? "application/octet-stream" : contentType;
+            ObjectMetadata metadata = new ObjectMetadata();
+            metadata.setContentLength(contentLength);
+            metadata.setContentType(contentType);
+            _getOssClient().putObject(bucketName, objectKey, stream, metadata);
+            log.info("upload file success, bucketName:{}, objectKey:{}", bucketName, objectKey);
+            return ossProperties.getAccessUrl(objectKey);
+        } catch (Exception e) {
+            log.error("upload file error", e);
+            throw new OssException("upload file error", e);
+        }
     }
 
     @Override
@@ -190,6 +207,7 @@ public class AliyunOssStorage extends AbstractOssStorage {
             ossStsToken.setAccessSecret(acsResponse.getCredentials().getAccessKeySecret());
             ossStsToken.setSecurityToken(acsResponse.getCredentials().getSecurityToken());
             ossStsToken.setExpiration(acsResponse.getCredentials().getExpiration());
+            ossStsToken.setBucketName(ossProperties.getBucketName());
             return ossStsToken;
 
         } catch (Exception e) {
@@ -198,6 +216,39 @@ public class AliyunOssStorage extends AbstractOssStorage {
         } finally {
             // 关闭client
             acsClient.shutdown();
+        }
+    }
+
+    @Override
+    public PresignedUrl getPresignedUrl(String objectKey, long expires, Map<String, String> headers) {
+        has(objectKey, "objectKey is null");
+        try {
+            checkBucket(ossProperties.getBucketName());
+
+            // 设置用户自定义元数据。
+            Map<String, String> userMetadata = new HashMap<String, String>();
+
+
+            Calendar rightNow = Calendar.getInstance();
+            rightNow.add(Calendar.SECOND, (int) expires);
+
+            GeneratePresignedUrlRequest request = new GeneratePresignedUrlRequest(ossProperties.getBucketName(),
+                    objectKey, com.aliyun.oss.HttpMethod.PUT);
+            // 设置过期时间。
+            request.setExpiration(rightNow.getTime());
+            // 设置请求头。
+            request.setHeaders(headers);
+            // 设置用户自定义元数据。
+            request.setUserMetadata(userMetadata);
+
+            // 生成签名URL（HTTP PUT请求）。
+            URL url = _getOssClient().generatePresignedUrl(request);
+            String presignedUrl = URLDecoder.decode(url.toString(), StandardCharsets.UTF_8);
+            String accessUrl = ossProperties.getAccessUrl(objectKey);
+            return new PresignedUrl(presignedUrl, accessUrl);
+        } catch (Exception e) {
+            log.error("get presigned url error", e);
+            throw new OssException("get presigned url error", e);
         }
     }
 
@@ -236,7 +287,7 @@ public class AliyunOssStorage extends AbstractOssStorage {
      */
     private void checkBucket(String bucketName) {
         has(bucketName, "bucketName is null");
-        if (!this.ossClient.doesBucketExist(bucketName)) {
+        if (!_getOssClient().doesBucketExist(bucketName)) {
             this.ossClient.createBucket(bucketName);
             this.ossClient.setBucketAcl(bucketName, CannedAccessControlList.parse(ossProperties.getEndpointPolicy()));
         }

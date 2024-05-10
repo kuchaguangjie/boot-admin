@@ -111,7 +111,9 @@ public class SwaggerConfiguration {
                 .pathsToMatch(
                         "/auth/**",
                         "/sys/**",
-                        "/tenant/**"
+                        "/tenant/**",
+                        "/commons/**",
+                        "/common/**"
                 )
                 .build();
     }

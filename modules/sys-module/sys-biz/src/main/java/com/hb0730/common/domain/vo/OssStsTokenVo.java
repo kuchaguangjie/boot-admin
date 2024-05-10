@@ -1,4 +1,4 @@
-package com.hb0730.common.domain;
+package com.hb0730.common.domain.vo;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -27,4 +27,6 @@ public class OssStsTokenVo implements Serializable {
     @Schema(description = "expiration", hidden = true)
     @JsonIgnore
     private String expiration;
+    @Schema(description = "bucketName")
+    private String bucketName;
 }
