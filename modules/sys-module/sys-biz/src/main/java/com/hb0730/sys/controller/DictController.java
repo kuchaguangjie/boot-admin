@@ -2,7 +2,7 @@ package com.hb0730.sys.controller;
 
 import com.hb0730.base.R;
 import com.hb0730.common.api.JsfPage;
-import com.hb0730.common.domain.SelectOptionVo;
+import com.hb0730.common.domain.vo.SelectOptionVo;
 import com.hb0730.sys.domain.dto.DictDto;
 import com.hb0730.sys.domain.dto.DictItemDto;
 import com.hb0730.sys.domain.query.DictItemQuery;

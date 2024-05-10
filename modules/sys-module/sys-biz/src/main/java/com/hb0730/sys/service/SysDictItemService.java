@@ -4,7 +4,7 @@ import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.bean.copier.CopyOptions;
 import com.hb0730.base.exception.ServiceException;
 import com.hb0730.common.api.JsfPage;
-import com.hb0730.common.domain.SelectOptionVo;
+import com.hb0730.common.domain.vo.SelectOptionVo;
 import com.hb0730.jpa.core.service.BaseService;
 import com.hb0730.query.jpa.QueryHelper;
 import com.hb0730.sys.domain.dto.DictItemDto;

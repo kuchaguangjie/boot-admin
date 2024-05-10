@@ -1,7 +1,7 @@
 package com.hb0730.sys.service.mapstruct;
 
 import com.hb0730.base.mapstruct.BaseMapstruct;
-import com.hb0730.common.domain.SelectOptionVo;
+import com.hb0730.common.domain.vo.SelectOptionVo;
 import com.hb0730.sys.domain.dto.DictItemDto;
 import com.hb0730.sys.domain.entity.SysDictItem;
 

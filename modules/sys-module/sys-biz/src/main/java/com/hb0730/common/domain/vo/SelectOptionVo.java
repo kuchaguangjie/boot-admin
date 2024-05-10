@@ -1,4 +1,4 @@
-package com.hb0730.common.domain;
+package com.hb0730.common.domain.vo;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
