@@ -19,6 +19,9 @@ public class DefaultIdentifierGenerator implements BeforeExecutionGenerator {
     @Override
     public Serializable generate(SharedSessionContractImplementor session, Object owner, Object currentValue,
                                  EventType eventType) {
+        if (currentValue != null) {
+            return (Serializable) currentValue;
+        }
         return sequence.nextId() + "";
     }
 

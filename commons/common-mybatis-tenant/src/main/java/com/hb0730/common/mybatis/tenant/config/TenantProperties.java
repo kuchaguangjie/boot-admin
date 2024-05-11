@@ -31,6 +31,7 @@ public class TenantProperties implements Serializable {
             "sys_notice",
             "sys_quartz_job",
             "sys_oss_config",
+            "t_area",
             "bas_user_role",
             "bas_role_permission",
             "bas_permission",
