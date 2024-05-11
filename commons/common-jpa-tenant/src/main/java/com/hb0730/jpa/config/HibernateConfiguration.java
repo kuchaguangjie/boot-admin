@@ -111,7 +111,8 @@ public class HibernateConfiguration {
                 "bas_user",
                 "bas_notice_record",
                 "bas_role",
-                "t_area"
+                "t_area",
+                "t_attachment"
         );
 
         /**

@@ -3,7 +3,9 @@ package com.hb0730.common.controller;
 import com.hb0730.base.R;
 import com.hb0730.base.exception.ServiceException;
 import com.hb0730.base.utils.OssUtil;
+import com.hb0730.common.api.JsfPage;
 import com.hb0730.common.domain.dto.AttachmentDto;
+import com.hb0730.common.domain.query.AttachmentQuery;
 import com.hb0730.common.domain.vo.FilePresignedUrlRespVO;
 import com.hb0730.common.service.AttachmentService;
 import com.hb0730.common.service.CommonsOssService;
@@ -14,6 +16,8 @@ import io.swagger.v3.oas.annotations.Parameters;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -25,6 +29,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
@@ -106,6 +111,37 @@ public class AttachmentController {
         String sysCode = SecurityUtil.getSysCode();
         attachmentDto.setSysCode(sysCode);
         attachmentService.save(attachmentDto);
+        return R.OK();
+    }
+
+    @GetMapping("/page")
+    @Operation(summary = "分页查询")
+    public R<JsfPage<AttachmentDto>> page(AttachmentQuery query) {
+        query.setSysCode(SecurityUtil.getSysCode());
+        return R.OK(attachmentService.page(query));
+    }
+
+    @GetMapping("/list")
+    @Operation(summary = "列表查询")
+    public R<List<AttachmentDto>> list(AttachmentQuery query) {
+        query.setSysCode(SecurityUtil.getSysCode());
+        return R.OK(attachmentService.list(query));
+    }
+
+    /**
+     * 删除
+     *
+     * @param id 主键
+     * @return .
+     */
+    @DeleteMapping
+    @Operation(summary = "删除")
+    @Parameters({
+            @io.swagger.v3.oas.annotations.Parameter(name = "id", description = "主键", required = true)
+    })
+    @PreAuthorize("hasAuthority('common:attachment:delete')")
+    public R<String> delete(@RequestParam String id) {
+        attachmentService.delete(id);
         return R.OK();
     }
 

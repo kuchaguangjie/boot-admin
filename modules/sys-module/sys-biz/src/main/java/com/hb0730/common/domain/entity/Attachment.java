@@ -19,7 +19,7 @@ import lombok.experimental.Accessors;
 @Setter
 @Accessors(chain = true)
 @Entity
-@Table(name = "sys_attachment")
+@Table(name = "t_attachment")
 public class Attachment extends BaseEntity {
     @Id
     @IdGenerator
