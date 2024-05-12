@@ -25,6 +25,10 @@ public class OssUtil {
         }
         // 文件名= 文件名+时间戳+后缀
         String objectName = orgName.substring(0, orgName.lastIndexOf(".")) + "_" + System.currentTimeMillis() + orgName.substring(orgName.indexOf("."));
+        
+        if (StrUtil.isBlank(bizPath)) {
+            return objectName;
+        }
         return bizPath + objectName;
     }
 

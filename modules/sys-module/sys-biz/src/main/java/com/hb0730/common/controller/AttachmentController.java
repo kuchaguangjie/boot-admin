@@ -3,6 +3,7 @@ package com.hb0730.common.controller;
 import com.hb0730.base.R;
 import com.hb0730.base.exception.ServiceException;
 import com.hb0730.base.utils.OssUtil;
+import com.hb0730.base.utils.StrUtil;
 import com.hb0730.common.api.JsfPage;
 import com.hb0730.common.domain.dto.AttachmentDto;
 import com.hb0730.common.domain.query.AttachmentQuery;
@@ -64,6 +65,13 @@ public class AttachmentController {
         }
         OssStorage storage = ossStorage.get();
         try {
+            if (StrUtil.isBlank(path)) {
+                path = SecurityUtil.getSysCode();
+            } else {
+                path = OssUtil.normalize(path);
+                path = SecurityUtil.getSysCode() + "/" + path;
+
+            }
             AttachmentDto attachment = uploadFile(file, path, storage);
             attachmentService.save(attachment);
             return R.OK(attachment);
