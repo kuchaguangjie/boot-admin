@@ -104,6 +104,8 @@ public class UserLoginService implements com.hb0730.security.service.UserLoginSe
         userInfo.setPermissions(getPermissionsByAdmin(permissions));
         // 是否启用
         userInfo.setEnabled(user.getEnabled());
+        // 是否系统用户
+        userInfo.setSystem(user.getSystem());
         // 系统编码
         userInfo.setSysCode(null);
         // 商户
@@ -174,6 +176,8 @@ public class UserLoginService implements com.hb0730.security.service.UserLoginSe
         userInfo.setPermissions(getPermissions(permissions));
         // 是否启用
         userInfo.setEnabled(user.getEnabled());
+        // 是否系统用户
+        userInfo.setSystem(user.getSystem());
         return userInfo;
     }
 

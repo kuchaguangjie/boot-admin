@@ -68,7 +68,7 @@ public class LogoutSuccessHandler implements org.springframework.security.web.au
         }
         Optional<String> username = JwtUtil.getUsername(token);
         Optional<String> sysCode = JwtUtil.getTenant(token);
-        username.ifPresent(s -> userProvider.removeUser(getCacheKey(s, sysCode.orElse(null))));
+        username.ifPresent(s -> userProvider.removeUser(UserProvider.getCacheKey(s, sysCode.orElse(null))));
     }
 
     private void clearRoutes(String token) {
@@ -77,12 +77,5 @@ public class LogoutSuccessHandler implements org.springframework.security.web.au
             return;
         }
         JwtUtil.getUserid(token).ifPresent(userRoutesCache::delete);
-    }
-
-    private String getCacheKey(String username, String sysCode) {
-        if (StrUtil.isNotBlank(sysCode)) {
-            return sysCode + ":" + username;
-        }
-        return username;
     }
 }

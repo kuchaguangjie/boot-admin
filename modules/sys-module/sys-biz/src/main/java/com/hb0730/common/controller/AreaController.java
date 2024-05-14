@@ -5,6 +5,7 @@ import com.hb0730.sys.domain.dto.AreaDto;
 import com.hb0730.sys.domain.query.AreaQuery;
 import com.hb0730.sys.service.SysAreaService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -22,6 +23,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/common/area")
 @RequiredArgsConstructor
+@Tag(name = "公共接口：地区")
 public class AreaController {
     private final SysAreaService areaService;
 

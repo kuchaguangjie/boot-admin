@@ -18,6 +18,14 @@ import java.util.Set;
 public interface BasUserRepository extends BaseJpaRepository<BasUser, String> {
 
     /**
+     * 是否存在系统用户
+     *
+     * @param username 用户名
+     * @return 是否存在
+     */
+    boolean existsByUsernameAndSystemIsTrue(String username);
+
+    /**
      * 根据商户识别码统计用户数量
      *
      * @param sysCode .

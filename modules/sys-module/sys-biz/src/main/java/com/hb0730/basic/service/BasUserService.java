@@ -52,6 +52,17 @@ public class BasUserService extends BaseService<BasUserRepository, BasUser, Stri
     @Lazy
     private BasPostRepository basPostRepository;
 
+
+    /**
+     * 是否系统用户
+     *
+     * @param username 用户名
+     * @return 是否存在
+     */
+    public Boolean isSystemUser(String username) {
+        return baseRepository.existsByUsernameAndSystemIsTrue(username);
+    }
+
     /**
      * 根据用户名获取租户编码
      *

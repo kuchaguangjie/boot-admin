@@ -1,5 +1,6 @@
 package com.hb0730.security.cache;
 
+import com.hb0730.base.utils.StrUtil;
 import com.hb0730.security.domain.dto.UserInfoDto;
 
 /**
@@ -31,4 +32,19 @@ public interface UserProvider {
      * @return 是否成功
      */
     boolean removeUser(String key);
+
+
+    /**
+     * 获取缓存key
+     *
+     * @param username 用户名
+     * @param sysCode  系统编码
+     * @return key
+     */
+    static String getCacheKey(String username, String sysCode) {
+        if (StrUtil.isNotBlank(sysCode)) {
+            return sysCode + ":" + username;
+        }
+        return username;
+    }
 }

@@ -68,6 +68,10 @@ public class UserInfoDto implements UserDetails {
      * 是否启用
      */
     private Boolean enabled;
+    /**
+     * 是否系统用户
+     */
+    private Boolean system;
 
     @Override
     public Collection<AuthorityDto> getAuthorities() {

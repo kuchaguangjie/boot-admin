@@ -35,7 +35,7 @@ public class UserDetailServiceImpl implements UserDetailsService {
         if (!isAdminLogin) {
             sysCode = userService.getSysCodeByUsername(username);
         }
-        String cacheKey = getCacheKey(username, sysCode);
+        String cacheKey = UserProvider.getCacheKey(username, sysCode.orElse(null));
         UserInfoDto user = userProvider.getUser(cacheKey);
         if (null == user) {
             if (Boolean.TRUE.equals(isAdminLogin)) {
@@ -47,9 +47,5 @@ public class UserDetailServiceImpl implements UserDetailsService {
         }
 
         return user;
-    }
-
-    private String getCacheKey(String username, Optional<String> sysCode) {
-        return sysCode.map(s -> s + ":" + username).orElse(username);
     }
 }
