@@ -1,8 +1,8 @@
 package com.hb0730.basic.domain.entity;
 
 import com.hb0730.base.utils.CollectionUtil;
-import com.hb0730.jpa.core.BaseTenantEntity;
-import com.hb0730.jpa.core.incrementer.IdGenerator;
+import com.hb0730.data.core.domain.BaseTenantEntity;
+import com.hb0730.data.core.identifier.IdGenerator;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;

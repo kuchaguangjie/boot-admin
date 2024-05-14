@@ -10,7 +10,7 @@ import com.hb0730.basic.domain.query.BasOrgTreeQuery;
 import com.hb0730.basic.repository.BasOrgRepository;
 import com.hb0730.basic.repository.BasUserRepository;
 import com.hb0730.basic.service.mapstruct.BasOrgMapstruct;
-import com.hb0730.jpa.core.service.BaseService;
+import com.hb0730.data.core.service.BaseService;
 import com.hb0730.query.jpa.QueryHelper;
 import com.hb0730.sys.domain.entity.SysProduct;
 import jakarta.annotation.Resource;

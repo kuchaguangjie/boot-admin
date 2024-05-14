@@ -20,7 +20,7 @@
     <dependencies>
         <dependency>
             <groupId>com.hb0730</groupId>
-            <artifactId>common-jpa-tenant</artifactId>
+            <artifactId>data-jpa-tenant</artifactId>
             <version>${revision}</version>
         </dependency>
         <dependency>

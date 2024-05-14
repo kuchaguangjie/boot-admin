@@ -24,14 +24,11 @@
         <module>common-oss</module>
         <module>common-security</module>
         <module>common-web</module>
-        <module>common-mybatis</module>
-        <module>common-mybatis-tenant</module>
         <module>common-rpc</module>
         <module>common-api</module>
-        <module>common-query</module>
+        <module>common-data-query</module>
         <module>common-opentelemetry</module>
-        <module>common-jpa</module>
-        <module>common-jpa-tenant</module>
+        <module>common-data-jpa</module>
     </modules>
 
     <properties>

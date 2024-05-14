@@ -1,8 +1,7 @@
 package com.hb0730.security.service;
 
+import com.hb0730.base.core.TenantContext;
 import com.hb0730.security.cache.UserProvider;
-import com.hb0730.security.context.AuthenticationContext;
-import com.hb0730.security.context.AuthenticationContextHolder;
 import com.hb0730.security.domain.dto.UserInfoDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -26,15 +25,10 @@ public class UserDetailServiceImpl implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        AuthenticationContext authenticationContext = AuthenticationContextHolder.getContext();
-        Boolean isAdminLogin = false;
-        if (null != authenticationContext) {
-            isAdminLogin = authenticationContext.getTenantLogin();
-        }
-        Optional<String> sysCode = Optional.empty();
-        if (!isAdminLogin) {
-            sysCode = userService.getSysCodeByUsername(username);
-        }
+        String tenantId = TenantContext.get();
+        Optional<String> sysCode = Optional.ofNullable(tenantId);
+        boolean isAdminLogin = sysCode.isEmpty();
+
         String cacheKey = UserProvider.getCacheKey(username, sysCode.orElse(null));
         UserInfoDto user = userProvider.getUser(cacheKey);
         if (null == user) {

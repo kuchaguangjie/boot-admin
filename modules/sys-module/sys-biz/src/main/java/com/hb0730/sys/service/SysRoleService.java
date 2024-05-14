@@ -6,7 +6,7 @@ import com.hb0730.base.exception.ServiceException;
 import com.hb0730.base.utils.CollectionUtil;
 import com.hb0730.base.utils.StrUtil;
 import com.hb0730.common.api.JsfPage;
-import com.hb0730.jpa.core.service.BaseService;
+import com.hb0730.data.core.service.BaseService;
 import com.hb0730.query.jpa.QueryHelper;
 import com.hb0730.sys.domain.dto.RoleDto;
 import com.hb0730.sys.domain.entity.SysPermission;

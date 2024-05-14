@@ -16,15 +16,9 @@ import java.io.Serializable;
 @Getter
 @Setter
 public class LoginRequest implements Serializable {
-    @NotBlank(message = "用户名不能为空")
-    @Schema(description = "用户名", requiredMode = Schema.RequiredMode.REQUIRED)
+    @Schema(description = "用户名", requiredMode = Schema.RequiredMode.REQUIRED, hidden = true)
     private String username;
     @NotBlank(message = "密码不能为空")
     @Schema(description = "密码", requiredMode = Schema.RequiredMode.REQUIRED)
     private String password;
-    /**
-     * 是否租户登录
-     */
-    @Schema(description = "是否租户登录", requiredMode = Schema.RequiredMode.NOT_REQUIRED, defaultValue = "false")
-    private Boolean tenantLogin = false;
 }

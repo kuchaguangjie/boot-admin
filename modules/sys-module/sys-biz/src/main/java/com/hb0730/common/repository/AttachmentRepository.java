@@ -1,7 +1,7 @@
 package com.hb0730.common.repository;
 
 import com.hb0730.common.domain.entity.Attachment;
-import com.hb0730.jpa.core.repository.BaseJpaRepository;
+import com.hb0730.data.core.repository.BaseJpaRepository;
 import org.springframework.stereotype.Repository;
 
 /**

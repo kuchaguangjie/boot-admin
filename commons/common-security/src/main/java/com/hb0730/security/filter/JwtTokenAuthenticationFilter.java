@@ -5,7 +5,6 @@ import com.hb0730.base.core.UserContext;
 import com.hb0730.base.core.UserInfo;
 import com.hb0730.base.utils.StrUtil;
 import com.hb0730.security.cache.TokenProvider;
-import com.hb0730.security.context.AuthenticationContext;
 import com.hb0730.security.context.AuthenticationContextHolder;
 import com.hb0730.security.utils.JwtUtil;
 import jakarta.servlet.FilterChain;
@@ -42,13 +41,13 @@ public class JwtTokenAuthenticationFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         try {
             String token = JwtUtil.getToken(request);
-            // 是否租户登录
-            String tenant = JwtUtil.getTenant(request);
-            if (StrUtil.isBlank(tenant)) {
-                AuthenticationContext context = new AuthenticationContext();
-                context.setTenantLogin(true);
-                AuthenticationContextHolder.setContext(context);
-            }
+//            // 是否租户登录
+//            String tenant = JwtUtil.getTenant(request);
+//            if (StrUtil.isBlank(tenant)) {
+//                AuthenticationContext context = new AuthenticationContext();
+//                context.setTenantLogin(true);
+//                AuthenticationContextHolder.setContext(context);
+//            }
             if (StrUtil.isNotBlank(token)) {
                 // 判断是否过期
                 String value = tokenProvider.getValue(token);
@@ -63,22 +62,9 @@ public class JwtTokenAuthenticationFilter extends OncePerRequestFilter {
                             new UserInfo(
                                     JwtUtil.getUserid(request).orElse(null),
                                     usernameOptional.get(),
-                                    tenant
+                                    TenantContext.get()
                             )
                     );
-                    //  tenant 上下文
-                    JwtUtil.getTenant(token)
-                            .ifPresent(
-                                    sysCode -> {
-                                        UserInfo userInfo =
-                                                new UserInfo(
-                                                        JwtUtil.getUserid(request).orElse(null),
-                                                        usernameOptional.get(),
-                                                        sysCode
-                                                );
-                                        TenantContext.set(userInfo);
-                                    }
-                            );
 
                     UserDetails userDetails = userDetailsService.loadUserByUsername(usernameOptional.get());
                     UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(
@@ -95,8 +81,6 @@ public class JwtTokenAuthenticationFilter extends OncePerRequestFilter {
         } finally {
             AuthenticationContextHolder.clear();
             UserContext.remove();
-            ;
-            TenantContext.remove();
         }
     }
 }

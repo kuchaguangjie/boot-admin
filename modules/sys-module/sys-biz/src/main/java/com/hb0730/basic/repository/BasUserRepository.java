@@ -1,7 +1,7 @@
 package com.hb0730.basic.repository;
 
 import com.hb0730.basic.domain.entity.BasUser;
-import com.hb0730.jpa.core.repository.BaseJpaRepository;
+import com.hb0730.data.core.repository.BaseJpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
@@ -84,7 +84,7 @@ public interface BasUserRepository extends BaseJpaRepository<BasUser, String> {
      * @param username 用户名
      * @return 租户编码
      */
-    @Query("SELECT u.sysCode FROM BasUser u WHERE u.username = ?1")
+    @Query(value = "SELECT sys_code FROM bas_user where username = ?1", nativeQuery = true)
     String getSysCodeByUsername(String username);
 
     /**

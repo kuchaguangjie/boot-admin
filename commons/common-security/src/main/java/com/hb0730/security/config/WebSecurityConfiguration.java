@@ -3,6 +3,7 @@ package com.hb0730.security.config;
 import com.hb0730.base.utils.PasswordUtil;
 import com.hb0730.security.annotation.AnonymousAccess;
 import com.hb0730.security.filter.JwtTokenAuthenticationFilter;
+import com.hb0730.security.filter.TenantFilter;
 import com.hb0730.security.handler.TokenAccessDeniedHandler;
 import com.hb0730.security.handler.TokenAuthenticationEntryPoint;
 import lombok.RequiredArgsConstructor;
@@ -50,6 +51,7 @@ public class WebSecurityConfiguration {
     private final LogoutSuccessHandler logoutSuccessHandler;
     private final TokenAuthenticationEntryPoint tokenAuthenticationEntryPoint;
     private final JwtTokenAuthenticationFilter jwtTokenAuthenticationFilter;
+    private final TenantFilter tenantFilter;
     private final ApplicationContext applicationContext;
 
 
@@ -147,10 +149,15 @@ public class WebSecurityConfiguration {
                                         // 其他请求需要认证
                                         .anyRequest().authenticated()
                 )
+                // 添加租户过滤器
+                .addFilterBefore(tenantFilter, UsernamePasswordAuthenticationFilter.class)
                 // 添加jwt过滤器
                 .addFilterBefore(jwtTokenAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
                 // 解析JWT，重新设置上下文
+                .addFilterBefore(tenantFilter, LogoutFilter.class)
+                // 解析JWT，重新设置上下文
                 .addFilterBefore(jwtTokenAuthenticationFilter, LogoutFilter.class)
+
 
         ;
         return http.build();

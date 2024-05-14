@@ -7,7 +7,7 @@ import com.hb0730.base.exception.JobException;
 import com.hb0730.common.api.JR;
 import com.hb0730.common.api.JsfPage;
 import com.hb0730.common.api.ResponseUtil;
-import com.hb0730.jpa.core.service.BaseService;
+import com.hb0730.data.core.service.BaseService;
 import com.hb0730.query.jpa.QueryHelper;
 import com.hb0730.sys.domain.dto.QuartzJobDto;
 import com.hb0730.sys.domain.entity.SysQuartzJob;

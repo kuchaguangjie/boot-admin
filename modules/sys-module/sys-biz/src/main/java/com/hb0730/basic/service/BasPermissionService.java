@@ -7,7 +7,7 @@ import com.hb0730.basic.domain.entity.BasPermission;
 import com.hb0730.basic.domain.entity.BasRole;
 import com.hb0730.basic.repository.BasPermissionRepository;
 import com.hb0730.basic.service.mapstruct.BasPermissionMapstruct;
-import com.hb0730.jpa.core.service.BaseService;
+import com.hb0730.data.core.service.BaseService;
 import com.hb0730.sys.domain.dto.PermissionDto;
 import jakarta.annotation.Resource;
 import lombok.RequiredArgsConstructor;

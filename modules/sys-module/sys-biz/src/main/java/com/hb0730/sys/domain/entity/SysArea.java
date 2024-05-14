@@ -1,6 +1,6 @@
 package com.hb0730.sys.domain.entity;
 
-import com.hb0730.jpa.core.domain.BaseEntity;
+import com.hb0730.data.core.domain.BaseEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;

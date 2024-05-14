@@ -1,6 +1,6 @@
 package com.hb0730.basic.domain.entity;
 
-import com.hb0730.jpa.core.incrementer.IdGenerator;
+import com.hb0730.data.core.identifier.IdGenerator;
 import com.hb0730.sys.domain.entity.SysNotice;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;

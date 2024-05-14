@@ -1,8 +1,8 @@
 package com.hb0730.sys.domain.entity;
 
 import com.hb0730.basic.domain.entity.BasUser;
-import com.hb0730.jpa.core.BaseTenantEntity;
-import com.hb0730.jpa.core.incrementer.IdGenerator;
+import com.hb0730.data.core.domain.BaseEntity;
+import com.hb0730.data.core.identifier.IdGenerator;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
@@ -27,11 +27,16 @@ import java.util.List;
 @Accessors(chain = true)
 @Entity
 @Table(name = "bas_organization")
-public class SysTenant extends BaseTenantEntity {
+public class SysTenant extends BaseEntity {
 
     @Id
     @IdGenerator
     private String id;
+    /**
+     * 租户字段
+     */
+    @NotBlank(message = "租户字段不能为空")
+    private String sysCode;
     /**
      * 用户
      */

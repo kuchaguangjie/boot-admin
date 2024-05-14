@@ -1,7 +1,7 @@
 package com.hb0730.basic.repository;
 
 import com.hb0730.basic.domain.entity.BasOrg;
-import com.hb0730.jpa.core.repository.BaseJpaRepository;
+import com.hb0730.data.core.repository.BaseJpaRepository;
 import com.hb0730.sys.domain.entity.SysProduct;
 import org.springframework.stereotype.Repository;
 

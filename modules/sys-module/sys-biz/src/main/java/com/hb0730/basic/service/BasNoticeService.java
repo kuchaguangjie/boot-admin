@@ -8,7 +8,7 @@ import com.hb0730.basic.domain.query.BasNoticeQuery;
 import com.hb0730.basic.repository.BasNoticeRecordRepository;
 import com.hb0730.basic.service.mapstruct.BasNoticeMapstruct;
 import com.hb0730.common.api.JsfPage;
-import com.hb0730.jpa.core.service.BaseService;
+import com.hb0730.data.core.service.BaseService;
 import com.hb0730.query.jpa.QueryHelper;
 import com.hb0730.sys.domain.entity.SysNotice;
 import com.hb0730.sys.service.SysNoticeService;

@@ -3,7 +3,7 @@ package com.hb0730.sys.service;
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.bean.copier.CopyOptions;
 import com.hb0730.base.utils.StrUtil;
-import com.hb0730.jpa.core.service.BaseService;
+import com.hb0730.data.core.service.BaseService;
 import com.hb0730.sys.domain.dto.OssConfigDto;
 import com.hb0730.sys.domain.entity.SysOssConfig;
 import com.hb0730.sys.repository.SysTenantOssConfigRepository;

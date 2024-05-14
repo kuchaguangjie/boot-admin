@@ -2,7 +2,7 @@ package com.hb0730.basic.domain.dto;
 
 import com.hb0730.base.utils.StrUtil;
 import com.hb0730.base.utils.TreeUtil;
-import com.hb0730.jpa.core.BaseTenantDto;
+import com.hb0730.common.api.domain.BaseTenantDto;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;

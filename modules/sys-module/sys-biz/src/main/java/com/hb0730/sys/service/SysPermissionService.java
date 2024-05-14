@@ -4,7 +4,7 @@ import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.bean.copier.CopyOptions;
 import com.hb0730.base.exception.ServiceException;
 import com.hb0730.base.utils.CollectionUtil;
-import com.hb0730.jpa.core.service.BaseService;
+import com.hb0730.data.core.service.BaseService;
 import com.hb0730.query.jpa.QueryHelper;
 import com.hb0730.sys.domain.dto.PermissionDto;
 import com.hb0730.sys.domain.dto.PermissionSaveDto;

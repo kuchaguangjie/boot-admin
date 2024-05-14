@@ -10,7 +10,7 @@ import com.hb0730.basic.domain.query.BasPostQuery;
 import com.hb0730.basic.repository.BasPostRepository;
 import com.hb0730.basic.service.mapstruct.BasPostMapstruct;
 import com.hb0730.common.api.JsfPage;
-import com.hb0730.jpa.core.service.BaseService;
+import com.hb0730.data.core.service.BaseService;
 import com.hb0730.query.jpa.QueryHelper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

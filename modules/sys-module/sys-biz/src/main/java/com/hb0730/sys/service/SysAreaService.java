@@ -7,7 +7,7 @@ import com.hb0730.base.utils.ObjectUtil;
 import com.hb0730.base.utils.StrUtil;
 import com.hb0730.base.utils.TreeUtil;
 import com.hb0730.common.api.JsfPage;
-import com.hb0730.jpa.core.service.BaseService;
+import com.hb0730.data.core.service.BaseService;
 import com.hb0730.query.jpa.QueryHelper;
 import com.hb0730.sys.domain.dto.AreaDto;
 import com.hb0730.sys.domain.entity.SysArea;

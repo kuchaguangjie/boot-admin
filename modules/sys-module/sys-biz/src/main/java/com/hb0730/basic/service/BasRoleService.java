@@ -14,7 +14,7 @@ import com.hb0730.basic.repository.BasRoleRepository;
 import com.hb0730.basic.repository.BasUserRepository;
 import com.hb0730.basic.service.mapstruct.BasRoleMapstruct;
 import com.hb0730.common.api.JsfPage;
-import com.hb0730.jpa.core.service.BaseService;
+import com.hb0730.data.core.service.BaseService;
 import com.hb0730.query.jpa.QueryHelper;
 import jakarta.annotation.Resource;
 import lombok.RequiredArgsConstructor;

@@ -6,16 +6,15 @@ import com.hb0730.base.R;
 import com.hb0730.base.utils.StrUtil;
 import com.hb0730.security.cache.TokenProvider;
 import com.hb0730.security.config.SecurityProperties;
-import com.hb0730.security.context.AuthenticationContext;
 import com.hb0730.security.context.AuthenticationContextHolder;
 import com.hb0730.security.controller.mapstruct.LoginInfoMapstruct;
-import com.hb0730.security.domain.LoginRequest;
 import com.hb0730.security.domain.dto.UserInfoDto;
 import com.hb0730.security.domain.vo.LoginInfoVo;
 import com.hb0730.security.domain.vo.RouteVO;
 import com.hb0730.security.service.UserRouterService;
 import com.hb0730.security.utils.SecurityUtil;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameters;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -26,11 +25,11 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
@@ -76,19 +75,20 @@ public class AuthController {
                     content = @io.swagger.v3.oas.annotations.media.Content(schema = @io.swagger.v3.oas.annotations.media.Schema(implementation = R.class))
             )
     })
-    public R<LoginInfoVo> loginByUsername(@Validated @RequestBody LoginRequest query) {
+    @Parameters({
+            @io.swagger.v3.oas.annotations.Parameter(name = "username", description = "用户名", required = true),
+    })
+    @io.swagger.v3.oas.annotations.parameters.RequestBody(description = "密码", required = true)
+    public R<LoginInfoVo> loginByUsername(@RequestParam String username, @RequestBody String password) {
         // 公钥加密私钥解密
-        String password = SecureUtil.rsa(securityProperties.getLogin().getRsaPrivateKey(), securityProperties.getLogin().getRsaPublicKey()).decryptStr(
-                query.getPassword(),
+        password = SecureUtil.rsa(securityProperties.getLogin().getRsaPrivateKey(), securityProperties.getLogin().getRsaPublicKey()).decryptStr(
+                password,
                 KeyType.PrivateKey
         );
         try {
-            AuthenticationContext context = new AuthenticationContext();
-            context.setUsername(query.getUsername());
-            context.setTenantLogin(query.getTenantLogin());
-            AuthenticationContextHolder.setContext(context);
             // 登录认证
-            UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(query.getUsername(), password);
+            UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(username,
+                    password);
             Authentication authenticate = authenticationManager.authenticate(authenticationToken);
             UserInfoDto user = (UserInfoDto) authenticate.getPrincipal();
             // 生成令牌

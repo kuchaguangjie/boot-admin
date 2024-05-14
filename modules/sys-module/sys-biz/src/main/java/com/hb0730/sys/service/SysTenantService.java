@@ -15,7 +15,7 @@ import com.hb0730.basic.domain.entity.BasUser;
 import com.hb0730.basic.repository.BasRoleRepository;
 import com.hb0730.basic.service.BasUserService;
 import com.hb0730.common.api.JsfPage;
-import com.hb0730.jpa.core.service.BaseService;
+import com.hb0730.data.core.service.BaseService;
 import com.hb0730.query.jpa.QueryHelper;
 import com.hb0730.sys.domain.dto.TenantBasicConfigDto;
 import com.hb0730.sys.domain.dto.TenantDto;
@@ -228,7 +228,7 @@ public class SysTenantService extends BaseService<SysTenantRepository, SysTenant
         organization.setName(dto.getName());
         // 商户logo
         organization.setLogo(dto.getLogo());
-        
+
         organization.setParentId(null);
         // 联系人
         organization.setLinkMan(dto.getLinkMan());

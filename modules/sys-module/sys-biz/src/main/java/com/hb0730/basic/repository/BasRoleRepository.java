@@ -2,7 +2,7 @@ package com.hb0730.basic.repository;
 
 import com.hb0730.basic.domain.entity.BasRole;
 import com.hb0730.basic.domain.entity.BasRolePermission;
-import com.hb0730.jpa.core.repository.BaseJpaRepository;
+import com.hb0730.data.core.repository.BaseJpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 

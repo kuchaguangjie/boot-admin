@@ -6,7 +6,7 @@ import com.hb0730.common.domain.entity.Attachment;
 import com.hb0730.common.domain.query.AttachmentQuery;
 import com.hb0730.common.repository.AttachmentRepository;
 import com.hb0730.common.service.mapstruct.AttachmentMapstruct;
-import com.hb0730.jpa.core.service.BaseService;
+import com.hb0730.data.core.service.BaseService;
 import com.hb0730.query.jpa.QueryHelper;
 import jakarta.annotation.Resource;
 import lombok.RequiredArgsConstructor;

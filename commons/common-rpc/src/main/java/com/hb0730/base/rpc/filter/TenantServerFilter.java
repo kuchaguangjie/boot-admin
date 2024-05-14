@@ -9,6 +9,7 @@ import com.alipay.sofa.rpc.filter.AutoActive;
 import com.alipay.sofa.rpc.filter.Filter;
 import com.alipay.sofa.rpc.filter.FilterInvoker;
 import com.hb0730.base.core.TenantContext;
+import com.hb0730.base.core.UserContext;
 import com.hb0730.base.core.UserInfo;
 import lombok.extern.slf4j.Slf4j;
 
@@ -24,16 +25,16 @@ public class TenantServerFilter extends Filter {
     public SofaResponse invoke(FilterInvoker invoker, SofaRequest request) throws SofaRpcException {
         try {
             String id = RpcInvokeContext.getContext().getRequestBaggage(
-                    TenantContext.INVOKE_CTX_USER_ID);
+                    UserContext.INVOKE_CTX_USER_ID);
             String username = RpcInvokeContext.getContext().getRequestBaggage(
-                    TenantContext.INVOKE_CTX_USERNAME);
+                    UserContext.INVOKE_CTX_USERNAME);
             String sysCode = RpcInvokeContext.getContext().getRequestBaggage(
-                    TenantContext.INVOKE_CTX_SYS_CODE);
+                    UserContext.INVOKE_CTX_SYS_CODE);
 
             if (username != null && sysCode != null) {
                 log.info("user context username: {}, sysCode: {}", username, sysCode);
                 UserInfo userInfo = new UserInfo(id, username, sysCode);
-                TenantContext.set(userInfo);
+                UserContext.set(userInfo);
             }
             return invoker.invoke(request);
         } catch (Exception e) {

@@ -11,7 +11,7 @@ import com.hb0730.basic.domain.entity.BasRolePermission;
 import com.hb0730.basic.service.BasOrgService;
 import com.hb0730.basic.service.BasRoleService;
 import com.hb0730.basic.service.BasUserService;
-import com.hb0730.jpa.core.service.BaseService;
+import com.hb0730.data.core.service.BaseService;
 import com.hb0730.query.jpa.QueryHelper;
 import com.hb0730.sys.domain.dto.PermissionDto;
 import com.hb0730.sys.domain.dto.PermissionSaveDto;
