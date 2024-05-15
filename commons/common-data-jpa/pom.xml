@@ -21,7 +21,6 @@
     <modules>
         <module>data-jpa</module>
         <module>data-jpa-tenant</module>
-        <module>data-jpa-tenant</module>
     </modules>
 
 </project>
