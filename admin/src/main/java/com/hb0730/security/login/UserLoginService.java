@@ -7,6 +7,7 @@ import com.hb0730.basic.domain.entity.BasRole;
 import com.hb0730.basic.domain.entity.BasUser;
 import com.hb0730.basic.service.BasOrgService;
 import com.hb0730.basic.service.BasPermissionService;
+import com.hb0730.basic.service.BasRoleDataService;
 import com.hb0730.basic.service.BasRoleService;
 import com.hb0730.basic.service.BasUserService;
 import com.hb0730.security.domain.dto.TenantInfoDto;
@@ -24,8 +25,10 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
@@ -45,6 +48,7 @@ public class UserLoginService implements com.hb0730.security.service.UserLoginSe
     private final BasRoleService basRoleService;
     private final BasPermissionService basPermissionService;
     private final BasOrgService basOrgService;
+    private final BasRoleDataService basRoleDataService;
 
     @Override
     public Optional<String> getSysCodeByUsername(String username) {
@@ -134,6 +138,9 @@ public class UserLoginService implements com.hb0730.security.service.UserLoginSe
         if (null == orgInfo) {
             throw new UsernameNotFoundException("用户未分配机构，无法登录");
         }
+
+        Set<String> dataScope = basRoleDataService.getRoleDataScope(user.getId(), orgInfo.getId());
+
         BasOrg tenantInfo = basOrgService.getTopOrg(orgInfo.getSysCode());
 
         //商户有效期
@@ -178,6 +185,8 @@ public class UserLoginService implements com.hb0730.security.service.UserLoginSe
         userInfo.setEnabled(user.getEnabled());
         // 是否系统用户
         userInfo.setSystem(user.getSystem());
+        // 数据范围
+        userInfo.setDataScopes(new ArrayList<>(dataScope));
         return userInfo;
     }
 

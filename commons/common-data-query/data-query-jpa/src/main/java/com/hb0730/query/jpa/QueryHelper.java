@@ -6,6 +6,7 @@ import com.hb0730.base.utils.CollectionUtil;
 import com.hb0730.base.utils.StrUtil;
 import com.hb0730.common.api.BaseQuery;
 import com.hb0730.common.api.JsfPage;
+import com.hb0730.query.annotation.DataPermission;
 import com.hb0730.query.annotation.Equals;
 import com.hb0730.query.annotation.GreaterThan;
 import com.hb0730.query.annotation.GreaterThanEqual;
@@ -18,6 +19,7 @@ import com.hb0730.query.annotation.LikeRight;
 import com.hb0730.query.jpa.annotation.Query;
 import com.hb0730.query.jpa.bean.Pair;
 import com.hb0730.query.jpa.core.AbstractPredicateHandler;
+import com.hb0730.query.jpa.core.handler.DataPermissionPredicateHandler;
 import com.hb0730.query.jpa.core.handler.EqualsPredicateHandler;
 import com.hb0730.query.jpa.core.handler.GreaterThanEqualPredicateHandler;
 import com.hb0730.query.jpa.core.handler.GreaterThanPredicateHandler;
@@ -70,6 +72,7 @@ public class QueryHelper {
         specificationHandlerMap.put(LessThan.class, new LessThanPredicateHandler());
         specificationHandlerMap.put(Query.class, new QueryPredicateHandler());
         specificationHandlerMap.put(IsNull.class, new IsNullPredicateHandler());
+        specificationHandlerMap.put(DataPermission.class, new DataPermissionPredicateHandler());
 
     }
 

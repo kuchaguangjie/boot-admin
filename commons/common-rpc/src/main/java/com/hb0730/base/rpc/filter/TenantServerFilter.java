@@ -8,9 +8,9 @@ import com.alipay.sofa.rpc.ext.Extension;
 import com.alipay.sofa.rpc.filter.AutoActive;
 import com.alipay.sofa.rpc.filter.Filter;
 import com.alipay.sofa.rpc.filter.FilterInvoker;
-import com.hb0730.base.core.TenantContext;
-import com.hb0730.base.core.UserContext;
-import com.hb0730.base.core.UserInfo;
+import com.hb0730.base.context.TenantContext;
+import com.hb0730.base.context.UserContext;
+import com.hb0730.base.context.UserInfo;
 import lombok.extern.slf4j.Slf4j;
 
 /**
@@ -33,8 +33,15 @@ public class TenantServerFilter extends Filter {
 
             if (username != null && sysCode != null) {
                 log.info("user context username: {}, sysCode: {}", username, sysCode);
-                UserInfo userInfo = new UserInfo(id, username, sysCode);
-                UserContext.set(userInfo);
+//                UserInfo userInfo = new UserInfo(id, username, sysCode);
+//                UserContext.set(userInfo);
+                UserContext.set(
+                        UserInfo.builder()
+                                .id(id)
+                                .username(username)
+                                .sysCode(sysCode)
+                                .build()
+                );
             }
             return invoker.invoke(request);
         } catch (Exception e) {

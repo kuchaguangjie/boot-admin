@@ -1,6 +1,8 @@
 package com.hb0730.security.service;
 
-import com.hb0730.base.core.TenantContext;
+import com.hb0730.base.context.TenantContext;
+import com.hb0730.base.context.UserContext;
+import com.hb0730.base.context.UserInfo;
 import com.hb0730.security.cache.UserProvider;
 import com.hb0730.security.domain.dto.UserInfoDto;
 import lombok.RequiredArgsConstructor;
@@ -39,6 +41,17 @@ public class UserDetailServiceImpl implements UserDetailsService {
             }
             userProvider.putUser(cacheKey, user);
         }
+
+        // user 上下文
+        UserContext.set(
+                UserInfo.builder()
+                        .id(user.getId())
+                        .username(user.getUsername())
+                        .sysCode(user.getSysCode())
+                        .dataScopes(user.getDataScopes())
+                        .build()
+        );
+
 
         return user;
     }

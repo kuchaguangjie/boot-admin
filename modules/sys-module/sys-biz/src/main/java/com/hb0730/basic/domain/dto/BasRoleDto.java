@@ -36,6 +36,16 @@ public class BasRoleDto extends BaseTenantDto {
     @Schema(description = "角色标识")
     private String code;
     /**
+     * 数据范围
+     */
+    @Schema(description = "数据范围")
+    private Integer dataScope;
+    /**
+     * 自定义数据范围
+     */
+    @Schema(description = "自定义数据范围")
+    private List<String> orgIds;
+    /**
      * 描述
      */
     @Schema(description = "描述")
@@ -56,4 +66,5 @@ public class BasRoleDto extends BaseTenantDto {
      */
     @Schema(description = "权限id")
     private List<String> permissionIds;
+
 }

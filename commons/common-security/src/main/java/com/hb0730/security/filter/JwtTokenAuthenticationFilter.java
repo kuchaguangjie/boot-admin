@@ -1,8 +1,6 @@
 package com.hb0730.security.filter;
 
-import com.hb0730.base.core.TenantContext;
-import com.hb0730.base.core.UserContext;
-import com.hb0730.base.core.UserInfo;
+import com.hb0730.base.context.UserContext;
 import com.hb0730.base.utils.StrUtil;
 import com.hb0730.security.cache.TokenProvider;
 import com.hb0730.security.context.AuthenticationContextHolder;
@@ -41,13 +39,6 @@ public class JwtTokenAuthenticationFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         try {
             String token = JwtUtil.getToken(request);
-//            // 是否租户登录
-//            String tenant = JwtUtil.getTenant(request);
-//            if (StrUtil.isBlank(tenant)) {
-//                AuthenticationContext context = new AuthenticationContext();
-//                context.setTenantLogin(true);
-//                AuthenticationContextHolder.setContext(context);
-//            }
             if (StrUtil.isNotBlank(token)) {
                 // 判断是否过期
                 String value = tokenProvider.getValue(token);
@@ -57,15 +48,6 @@ public class JwtTokenAuthenticationFilter extends OncePerRequestFilter {
                         filterChain.doFilter(request, response);
                         return;
                     }
-                    // user 上下文
-                    UserContext.set(
-                            new UserInfo(
-                                    JwtUtil.getUserid(request).orElse(null),
-                                    usernameOptional.get(),
-                                    TenantContext.get()
-                            )
-                    );
-
                     UserDetails userDetails = userDetailsService.loadUserByUsername(usernameOptional.get());
                     UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(
                             userDetails,

@@ -6,6 +6,7 @@ import com.hb0730.base.exception.ServiceException;
 import com.hb0730.base.utils.CollectionUtil;
 import com.hb0730.base.utils.StrUtil;
 import com.hb0730.basic.domain.dto.BasRoleDto;
+import com.hb0730.basic.domain.entity.BasOrg;
 import com.hb0730.basic.domain.entity.BasPermission;
 import com.hb0730.basic.domain.entity.BasRole;
 import com.hb0730.basic.domain.entity.BasRolePermission;
@@ -146,6 +147,15 @@ public class BasRoleService extends BaseService<BasRoleRepository, BasRole, Stri
         if (existsCode) {
             throw new ServiceException("code已存在");
         }
+        if (CollectionUtil.isEmpty(dto.getOrgIds())) {
+            entity.setOrgs(null);
+        } else {
+            entity.setOrgs(dto.getOrgIds().stream().map(e -> {
+                BasOrg org = new BasOrg();
+                org.setId(e);
+                return org;
+            }).collect(Collectors.toList()));
+        }
         save(entity);
     }
 
@@ -169,6 +179,15 @@ public class BasRoleService extends BaseService<BasRoleRepository, BasRole, Stri
         }
         BasRole update = mapstruct.toEntity(dto);
         BeanUtil.copyProperties(update, entity, CopyOptions.create().ignoreNullValue());
+        if (CollectionUtil.isEmpty(dto.getOrgIds())) {
+            entity.setOrgs(null);
+        } else {
+            entity.setOrgs(dto.getOrgIds().stream().map(e -> {
+                BasOrg org = new BasOrg();
+                org.setId(e);
+                return org;
+            }).collect(Collectors.toList()));
+        }
         updateById(entity);
     }
 

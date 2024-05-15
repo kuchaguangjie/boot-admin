@@ -1,6 +1,6 @@
 package com.hb0730.security.filter;
 
-import com.hb0730.base.core.TenantContext;
+import com.hb0730.base.context.TenantContext;
 import com.hb0730.base.utils.StrUtil;
 import com.hb0730.security.service.UserLoginService;
 import com.hb0730.security.utils.JwtUtil;

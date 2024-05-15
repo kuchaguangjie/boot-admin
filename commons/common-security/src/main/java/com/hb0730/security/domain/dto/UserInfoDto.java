@@ -65,6 +65,10 @@ public class UserInfoDto implements UserDetails {
      */
     private List<String> permissions;
     /**
+     * 数据权限
+     */
+    private List<String> dataScopes;
+    /**
      * 是否启用
      */
     private Boolean enabled;

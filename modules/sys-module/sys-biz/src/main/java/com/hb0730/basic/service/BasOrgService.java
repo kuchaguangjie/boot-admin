@@ -21,6 +21,7 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -209,6 +210,33 @@ public class BasOrgService extends BaseService<BasOrgRepository, BasOrg, String>
         Specification<BasOrg> specification = QueryHelper.ofBean(query);
         List<BasOrg> res = baseRepository.findAll(specification);
         return mapstruct.toDtoList(res);
+    }
+
+
+    /**
+     * 根据角色ID查询
+     *
+     * @param roleId .
+     * @return .
+     */
+    public List<BasOrg> findByRoleId(String roleId) {
+        return baseRepository.findByRoleId(roleId);
+    }
+
+    /**
+     * 查询所有的子集
+     *
+     * @param orgId .
+     * @return .
+     */
+    public List<String> findChildrenIds(String orgId) {
+        //递归查询子集
+        List<String> childrenIds = baseRepository.findChildrenIds(orgId);
+        List<String> res = new ArrayList<>(childrenIds);
+        for (String childrenId : childrenIds) {
+            res.addAll(findChildrenIds(childrenId));
+        }
+        return res;
     }
 
 

@@ -3,6 +3,7 @@ package com.hb0730.basic.repository;
 import com.hb0730.basic.domain.entity.BasOrg;
 import com.hb0730.data.core.repository.BaseJpaRepository;
 import com.hb0730.sys.domain.entity.SysProduct;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -66,5 +67,25 @@ public interface BasOrgRepository extends BaseJpaRepository<BasOrg, String> {
      * @return .
      */
     boolean existsByParentId(String parentId);
+
+
+    /**
+     * 根据父级id查询
+     *
+     * @param parentId .
+     * @return .
+     */
+    @Query("select id from BasOrg where parentId = ?1")
+    List<String> findChildrenIds(String parentId);
+
+
+    /**
+     * 根据角色id查询
+     *
+     * @param roleId .
+     * @return .
+     */
+    @Query("SELECT o FROM BasOrg o WHERE o.id IN (SELECT orgId FROM BasRoleData WHERE roleId = ?1)")
+    List<BasOrg> findByRoleId(String roleId);
 
 }

@@ -8,8 +8,8 @@ import com.alipay.sofa.rpc.ext.Extension;
 import com.alipay.sofa.rpc.filter.AutoActive;
 import com.alipay.sofa.rpc.filter.Filter;
 import com.alipay.sofa.rpc.filter.FilterInvoker;
-import com.hb0730.base.core.UserContext;
-import com.hb0730.base.core.UserInfo;
+import com.hb0730.base.context.UserContext;
+import com.hb0730.base.context.UserInfo;
 import lombok.extern.slf4j.Slf4j;
 
 /**

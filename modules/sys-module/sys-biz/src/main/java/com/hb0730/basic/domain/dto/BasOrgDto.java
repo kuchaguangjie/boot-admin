@@ -6,6 +6,7 @@ import com.hb0730.common.api.domain.BaseTenantDto;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
@@ -77,7 +78,7 @@ public class BasOrgDto extends BaseTenantDto implements TreeUtil.Node<BasOrgDto,
      * 3 部门
      */
     @Schema(description = "机构类型,1 商户,2 机构,3 部门")
-    @NotBlank(message = "机构类型不能为空")
+    @NotNull(message = "机构类型不能为空")
     private Integer type = 2;
     /**
      * 备注

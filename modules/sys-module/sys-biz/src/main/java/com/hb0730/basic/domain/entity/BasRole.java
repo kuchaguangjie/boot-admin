@@ -42,6 +42,15 @@ public class BasRole extends BaseEntity {
      */
     @ManyToMany(mappedBy = "roles")
     private List<BasUser> users;
+
+    /**
+     * 数据范围
+     */
+    @ManyToMany
+    @JoinTable(name = "bas_role_data",
+            joinColumns = @JoinColumn(name = "role_id", referencedColumnName = "id"),
+            inverseJoinColumns = @JoinColumn(name = "org_id", referencedColumnName = "id"))
+    private List<BasOrg> orgs;
     /**
      * 角色名称
      */
@@ -54,6 +63,10 @@ public class BasRole extends BaseEntity {
      * 描述
      */
     private String description;
+    /**
+     * 数据范围
+     */
+    private Integer dataScope;
     /**
      * 是否系统
      */
@@ -72,9 +85,26 @@ public class BasRole extends BaseEntity {
      */
     private String sysCode;
 
+    /**
+     * 获取权限id
+     *
+     * @return .
+     */
     public List<String> getPermissionIds() {
         if (CollectionUtil.isNotEmpty(permissions)) {
             return this.permissions.stream().map(BasPermission::getId).toList();
+        }
+        return null;
+    }
+
+    /**
+     * 获取数据范围
+     *
+     * @return .
+     */
+    public List<String> getOrgIds() {
+        if (CollectionUtil.isNotEmpty(orgs)) {
+            return this.orgs.stream().map(BasOrg::getId).toList();
         }
         return null;
     }

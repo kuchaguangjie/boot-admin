@@ -4,6 +4,7 @@ import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.bean.copier.CopyOptions;
 import cn.hutool.core.util.IdUtil;
 import cn.hutool.core.util.RandomUtil;
+import com.hb0730.base.enums.DataScopeEnums;
 import com.hb0730.base.exception.ServiceException;
 import com.hb0730.base.utils.CollectionUtil;
 import com.hb0730.base.utils.PasswordUtil;
@@ -283,6 +284,7 @@ public class SysTenantService extends BaseService<SysTenantRepository, SysTenant
         role.setName("管理角色");
         role.setSystem(true);
         role.setEnabled(true);
+        role.setDataScope(DataScopeEnums.ALL.getValue());
         role.setDescription("系统自动创建-SYSTEM");
         // 1.1 角色-权限绑定
         List<SysTenantPermission> permissions =
