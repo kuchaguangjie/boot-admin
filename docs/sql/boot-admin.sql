@@ -9,7 +9,7 @@
  Target Server Version : 80300 (8.3.0)
  File Encoding         : 65001
 
- Date: 10/05/2024 16:37:23
+ Date: 15/05/2024 17:53:06
 */
 
 SET NAMES utf8mb4;
@@ -46,7 +46,7 @@ CREATE TABLE `bas_organization`
     `id`            varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
     `parent_id`     varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci  DEFAULT NULL COMMENT '父类机构ID',
     `name`          varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '机构名称',
-    `logo`          varchar(255) COLLATE utf8mb4_general_ci                       DEFAULT NULL,
+    `logo`          varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
     `product_id`    varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci  DEFAULT NULL COMMENT '产品ID',
     `link_man`      varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci  DEFAULT NULL COMMENT '联系人',
     `link_tel`      varchar(30) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci  DEFAULT NULL COMMENT '联系电话',
@@ -287,7 +287,7 @@ CREATE TABLE `bas_role`
     `name`        varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '角色名称',
     `code`        varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '角色编码',
     `description` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL COMMENT '描述',
-    `org_id`      varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci  DEFAULT NULL COMMENT '所属机构ID',
+    `data_scope`  tinyint                                                       DEFAULT NULL COMMENT '数据范围',
     `sys_code`    varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci  DEFAULT NULL COMMENT '系统编码',
     `is_system`   tinyint(1)                                                    DEFAULT '0' COMMENT '是否内置',
     `is_enabled`  tinyint(1)                                                    DEFAULT '1' COMMENT '是否启用',
@@ -304,10 +304,31 @@ CREATE TABLE `bas_role`
 -- Records of bas_role
 -- ----------------------------
 BEGIN;
-INSERT INTO `bas_role` (`id`, `name`, `code`, `description`, `org_id`, `sys_code`, `is_system`, `is_enabled`, `created`,
-                        `created_by`, `modified`, `modified_by`)
-VALUES ('1785229829160034304', '管理角色', 'PA001', NULL, '1785229829122285568', 'PA001', 1, 1, '2024-04-30 16:48:54',
-        'superadmin', '2024-05-10 14:27:58', 'superadmin');
+INSERT INTO `bas_role` (`id`, `name`, `code`, `description`, `data_scope`, `sys_code`, `is_system`, `is_enabled`,
+                        `created`, `created_by`, `modified`, `modified_by`)
+VALUES ('1785229829160034304', '管理角色', 'PA001', NULL, 1, 'PA001', 1, 1, '2024-04-30 16:48:54', 'superadmin',
+        '2024-05-10 14:27:58', 'superadmin');
+COMMIT;
+
+-- ----------------------------
+-- Table structure for bas_role_data
+-- ----------------------------
+DROP TABLE IF EXISTS `bas_role_data`;
+CREATE TABLE `bas_role_data`
+(
+    `role_id` varchar(32) COLLATE utf8mb4_general_ci NOT NULL COMMENT '角色ID',
+    `org_id`  varchar(32) COLLATE utf8mb4_general_ci NOT NULL COMMENT '部门ID',
+    PRIMARY KEY (`role_id`, `org_id`)
+) ENGINE = InnoDB
+  DEFAULT CHARSET = utf8mb4
+  COLLATE = utf8mb4_general_ci COMMENT ='管理端：角色数据权限范围';
+
+-- ----------------------------
+-- Records of bas_role_data
+-- ----------------------------
+BEGIN;
+INSERT INTO `bas_role_data` (`role_id`, `org_id`)
+VALUES ('1790675961945612290', '1790672401291894786');
 COMMIT;
 
 -- ----------------------------
@@ -427,9 +448,8 @@ COMMIT;
 DROP TABLE IF EXISTS `bas_user_post`;
 CREATE TABLE `bas_user_post`
 (
-    `user_id`  varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
-    `post_id`  varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
-    `sys_code` varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '商户识别码',
+    `user_id` varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+    `post_id` varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
     PRIMARY KEY (`user_id`, `post_id`)
 ) ENGINE = InnoDB
   DEFAULT CHARSET = utf8mb4
@@ -560,7 +580,7 @@ CREATE TABLE `sys_oss_config`
     `endpoint`    varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT 'endpoint',
     `domain`      varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL COMMENT '自定义域名',
     `region`      varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci  DEFAULT NULL COMMENT '区域',
-    `role_arn`    varchar(32) COLLATE utf8mb4_general_ci                        DEFAULT NULL COMMENT '角色ID，用于STS临时授权',
+    `role_arn`    varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci  DEFAULT NULL COMMENT '角色ID，用于STS临时授权',
     `sys_code`    varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci  NOT NULL COMMENT '商户识别码',
     `created_by`  varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci  DEFAULT NULL COMMENT '创建者',
     `created`     datetime                                                      DEFAULT NULL COMMENT '创建时间',
@@ -1332,23 +1352,29 @@ COMMIT;
 DROP TABLE IF EXISTS `t_area`;
 CREATE TABLE `t_area`
 (
-    `id`          varchar(32) COLLATE utf8mb4_general_ci NOT NULL,
-    `parent_id`   varchar(32) COLLATE utf8mb4_general_ci                       DEFAULT NULL COMMENT '父ID',
-    `code`        varchar(32) COLLATE utf8mb4_general_ci NOT NULL COMMENT '编码',
-    `name`        varchar(32) COLLATE utf8mb4_general_ci NOT NULL COMMENT '名称',
-    `full_name`   varchar(255) COLLATE utf8mb4_general_ci                      DEFAULT NULL COMMENT '完成名称/带上父名称',
-    `path`        varchar(255) COLLATE utf8mb4_general_ci                      DEFAULT NULL COMMENT '路径',
-    `level`       int                                                          DEFAULT NULL COMMENT '等级',
-    `remark`      varchar(255) COLLATE utf8mb4_general_ci                      DEFAULT NULL COMMENT '备注',
-    `is_enabled`  tinyint(1)                                                   DEFAULT '1' COMMENT '状态',
-    `created_by`  varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL COMMENT '创建者',
-    `created`     datetime                                                     DEFAULT NULL COMMENT '创建时间',
-    `modified_by` varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL COMMENT '更新者',
-    `modified`    datetime                                                     DEFAULT NULL COMMENT '更新时间',
+    `id`          varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+    `parent_id`   varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci  DEFAULT NULL COMMENT '父ID',
+    `code`        varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '编码',
+    `name`        varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '名称',
+    `full_name`   varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL COMMENT '完成名称/带上父名称',
+    `path`        varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL COMMENT '路径',
+    `level`       int                                                           DEFAULT NULL COMMENT '等级',
+    `remark`      varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL COMMENT '备注',
+    `is_enabled`  tinyint(1)                                                    DEFAULT '1' COMMENT '状态',
+    `created_by`  varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci  DEFAULT NULL COMMENT '创建者',
+    `created`     datetime                                                      DEFAULT NULL COMMENT '创建时间',
+    `modified_by` varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci  DEFAULT NULL COMMENT '更新者',
+    `modified`    datetime                                                      DEFAULT NULL COMMENT '更新时间',
     PRIMARY KEY (`id`)
 ) ENGINE = InnoDB
   DEFAULT CHARSET = utf8mb4
   COLLATE = utf8mb4_general_ci COMMENT ='基础：地区管理';
+
+-- ----------------------------
+-- Records of t_area
+-- ----------------------------
+BEGIN;
+COMMIT;
 
 -- ----------------------------
 -- Table structure for t_attachment
@@ -1356,12 +1382,12 @@ CREATE TABLE `t_area`
 DROP TABLE IF EXISTS `t_attachment`;
 CREATE TABLE `t_attachment`
 (
-    `id`           varchar(32) COLLATE utf8mb4_general_ci NOT NULL,
+    `id`           varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
     `display_name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL COMMENT '名称',
-    `media_type`   varchar(32) COLLATE utf8mb4_general_ci                        DEFAULT NULL COMMENT '类型',
+    `media_type`   varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci  DEFAULT NULL COMMENT '类型',
     `size`         bigint                                                        DEFAULT NULL COMMENT '大小',
-    `permalink`    varchar(255) COLLATE utf8mb4_general_ci                       DEFAULT NULL COMMENT '链接',
-    `sys_code`     varchar(32) COLLATE utf8mb4_general_ci                        DEFAULT NULL COMMENT '商户',
+    `permalink`    varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL COMMENT '链接',
+    `sys_code`     varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci  DEFAULT NULL COMMENT '商户',
     `created`      datetime                                                      DEFAULT NULL COMMENT '创建时间',
     `created_by`   varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci  DEFAULT NULL COMMENT '创建者',
     `modified`     datetime                                                      DEFAULT NULL COMMENT '修改时间',
