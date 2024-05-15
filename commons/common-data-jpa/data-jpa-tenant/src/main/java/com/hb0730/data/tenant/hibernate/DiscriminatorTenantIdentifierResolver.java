@@ -1,6 +1,6 @@
 package com.hb0730.data.tenant.hibernate;
 
-import com.hb0730.base.core.TenantContext;
+import com.hb0730.base.context.TenantContext;
 import org.checkerframework.checker.initialization.qual.Initialized;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.UnknownKeyFor;

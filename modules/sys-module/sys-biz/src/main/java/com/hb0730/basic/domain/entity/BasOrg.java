@@ -1,6 +1,6 @@
 package com.hb0730.basic.domain.entity;
 
-import com.hb0730.data.core.domain.BaseTenantEntity;
+import com.hb0730.data.core.domain.BaseEntity;
 import com.hb0730.data.core.identifier.IdGenerator;
 import com.hb0730.sys.domain.entity.SysProduct;
 import jakarta.persistence.Column;
@@ -26,7 +26,7 @@ import java.util.List;
 @Accessors(chain = true)
 @Entity
 @Table(name = "bas_organization")
-public class BasOrg extends BaseTenantEntity {
+public class BasOrg extends BaseEntity {
 
     @Id
     @IdGenerator
@@ -109,4 +109,9 @@ public class BasOrg extends BaseTenantEntity {
      */
     @Column(name = "`is_saas`", columnDefinition = "tinyint(1) default 0")
     private Boolean saas = false;
+
+    /**
+     * 商户识别码
+     */
+    private String sysCode;
 }

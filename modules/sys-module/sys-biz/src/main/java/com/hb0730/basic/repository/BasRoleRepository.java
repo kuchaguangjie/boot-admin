@@ -26,15 +26,14 @@ public interface BasRoleRepository extends BaseJpaRepository<BasRole, String> {
     @Query("SELECT r FROM BasRole r JOIN BasUserRole ur ON r.id = ur.roleId WHERE ur.userId = ?1")
     List<BasRole> findByUserId(String userId);
 
-
     /**
-     * 根据机构ID查询管理员角色
+     * 根据商户码获取角色ID
      *
-     * @param orgIds .
+     * @param sysCodes .
      * @return .
      */
-    @Query("SELECT r.id FROM BasRole r WHERE r.org.id IN ?1 AND r.system = true")
-    Set<String> findAdminRoleIdsByOrgIds(List<String> orgIds);
+    @Query("SELECT r.id FROM BasRole r WHERE r.sysCode IN ?1 AND r.system = true")
+    Set<String> findAdminRoleIdsBySysCodes(List<String> sysCodes);
 
 
     /**

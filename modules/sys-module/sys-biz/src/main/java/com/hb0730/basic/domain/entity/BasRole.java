@@ -1,7 +1,7 @@
 package com.hb0730.basic.domain.entity;
 
 import com.hb0730.base.utils.CollectionUtil;
-import com.hb0730.data.core.domain.BaseTenantEntity;
+import com.hb0730.data.core.domain.BaseEntity;
 import com.hb0730.data.core.identifier.IdGenerator;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -9,7 +9,6 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
-import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.Setter;
@@ -26,7 +25,7 @@ import java.util.List;
 @Accessors(chain = true)
 @Entity
 @Table(name = "bas_role")
-public class BasRole extends BaseTenantEntity {
+public class BasRole extends BaseEntity {
     @Id
     @IdGenerator
     private String id;
@@ -43,12 +42,6 @@ public class BasRole extends BaseTenantEntity {
      */
     @ManyToMany(mappedBy = "roles")
     private List<BasUser> users;
-    /**
-     * 组织
-     */
-    @OneToOne
-    @JoinColumn(name = "org_id")
-    private BasOrg org;
     /**
      * 角色名称
      */
@@ -73,6 +66,11 @@ public class BasRole extends BaseTenantEntity {
     @Column(name = "is_enabled", columnDefinition = "tinyint(1) default 1")
     private Boolean enabled = true;
 
+
+    /**
+     * 商户识别码
+     */
+    private String sysCode;
 
     public List<String> getPermissionIds() {
         if (CollectionUtil.isNotEmpty(permissions)) {

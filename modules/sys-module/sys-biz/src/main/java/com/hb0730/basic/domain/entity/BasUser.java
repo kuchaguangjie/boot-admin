@@ -1,6 +1,6 @@
 package com.hb0730.basic.domain.entity;
 
-import com.hb0730.data.core.domain.BaseTenantEntity;
+import com.hb0730.data.core.domain.BaseEntity;
 import com.hb0730.data.core.identifier.IdGenerator;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -26,7 +26,7 @@ import java.util.List;
 @Accessors(chain = true)
 @Entity
 @Table(name = "bas_user")
-public class BasUser extends BaseTenantEntity {
+public class BasUser extends BaseEntity {
     @Id
     @IdGenerator
     private String id;
@@ -101,4 +101,9 @@ public class BasUser extends BaseTenantEntity {
      */
     @Column(name = "is_enabled", columnDefinition = "bit(1) default 1")
     private Boolean enabled = true;
+
+    /**
+     * 商户识别码
+     */
+    private String sysCode;
 }

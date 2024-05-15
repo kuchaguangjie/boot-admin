@@ -10,7 +10,6 @@ import com.hb0730.basic.domain.entity.BasRole;
 import com.hb0730.basic.domain.entity.BasRolePermission;
 import com.hb0730.basic.service.BasOrgService;
 import com.hb0730.basic.service.BasRoleService;
-import com.hb0730.basic.service.BasUserService;
 import com.hb0730.data.core.service.BaseService;
 import com.hb0730.query.jpa.QueryHelper;
 import com.hb0730.sys.domain.dto.PermissionDto;
@@ -45,9 +44,6 @@ public class SysTenantPermissionService extends BaseService<SysTenantPermissionR
     @Lazy
     @Resource
     private BasOrgService basOrgService;
-    @Lazy
-    @Resource
-    private BasUserService basUserService;
     @Lazy
     @Resource
     private BasRoleService basRoleService;
@@ -167,10 +163,6 @@ public class SysTenantPermissionService extends BaseService<SysTenantPermissionR
         if (CollectionUtil.isEmpty(orgIds)) {
             return;
         }
-        // 根据 商户id 查询商户下的用户信息
-//        Set<String> userIds = basUserService.findUserIdsByOrgIds(orgIds);
-        // 根据用户id查询角色Id
-//        Set<String> roleIds = basUserService.findRoleIdsByUserIds(userIds);
         // 查询商户下所有的角色ID
         Set<String> roleIds = basRoleService.findRoleIdsBySysCodes(sysCodes);
 
@@ -179,7 +171,7 @@ public class SysTenantPermissionService extends BaseService<SysTenantPermissionR
         // 重合的权限用于重新赋给用户
         List<String> newPerList = new ArrayList<>();
         // 根据 商户id 查询管理员 角色ids
-        Set<String> adminRoleIds = basRoleService.findAdminRoleIdsByOrgIds(orgIds);
+        Set<String> adminRoleIds = basRoleService.findAdminRoleIdsBySysCodes(sysCodes);
         // 删除修改后角色下所有的旧权限 并添加新权限集合
         for (String roleId : roleIds) {
             // 是管理员的角色

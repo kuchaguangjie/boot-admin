@@ -55,13 +55,13 @@ public class BasRoleService extends BaseService<BasRoleRepository, BasRole, Stri
     }
 
     /**
-     * 根据组织ID获取管理员角色
+     * 根据系统编码获取管理员角色
      *
-     * @param orgIds 组织ID
+     * @param sysCodes 系统编码
      * @return 角色
      */
-    public Set<String> findAdminRoleIdsByOrgIds(List<String> orgIds) {
-        return baseRepository.findAdminRoleIdsByOrgIds(orgIds);
+    public Set<String> findAdminRoleIdsBySysCodes(List<String> sysCodes) {
+        return baseRepository.findAdminRoleIdsBySysCodes(sysCodes);
     }
 
     /**

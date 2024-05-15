@@ -276,8 +276,6 @@ public class SysTenantService extends BaseService<SysTenantRepository, SysTenant
     private void initUserRoleProduct(SysTenant organization) {
         // 1、为厂商自动创建管理角色，角色对应权限默认系统所有
         BasRole role = new BasRole();
-//        String roleId = IdUtil.getSnowflakeNextIdStr();
-//        role.setId(roleId);
         role.setCreated(new Date());
         role.setCreatedBy(organization.getCreatedBy());
         role.setCode(organization.getSysCode());
@@ -285,13 +283,6 @@ public class SysTenantService extends BaseService<SysTenantRepository, SysTenant
         role.setName("管理角色");
         role.setSystem(true);
         role.setEnabled(true);
-
-//        BasOrg basOrg = new BasOrg();
-//        basOrg.setId(organization.getId());
-//        basOrg.setName(organization.getName());
-//        basOrg.setSysCode(organization.getSysCode());
-        BasOrg basOrg = BeanUtil.toBean(organization, BasOrg.class);
-        role.setOrg(basOrg);
         role.setDescription("系统自动创建-SYSTEM");
         // 1.1 角色-权限绑定
         List<SysTenantPermission> permissions =
@@ -323,6 +314,7 @@ public class SysTenantService extends BaseService<SysTenantRepository, SysTenant
         user.setPhone(organization.getLinkTel());
         user.setSystem(true);
         user.setEnabled(true);
+        BasOrg basOrg = BeanUtil.toBean(organization, BasOrg.class);
         user.setOrg(basOrg);
         user.setSysCode(organization.getSysCode());
         // 3、用户-角色绑定
