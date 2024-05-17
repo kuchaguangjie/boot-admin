@@ -2,7 +2,7 @@ package com.hb0730.sys.domain.dto;
 
 import com.hb0730.common.api.domain.BaseDto;
 import io.swagger.v3.oas.annotations.media.Schema;
-import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
@@ -86,7 +86,7 @@ public class PermissionSaveDto extends BaseDto {
      * 菜单类型 1 菜单 2 iframe 3 外链 4 按钮
      */
     @Schema(description = "菜单类型 1 菜单 2 iframe 3 外链 4 按钮")
-    @NotBlank(message = "菜单类型不能为空")
+    @NotNull(message = "菜单类型不能为空")
     private Integer menuType;
     /**
      * 权限标识
@@ -97,6 +97,6 @@ public class PermissionSaveDto extends BaseDto {
      * 是否启用
      */
     @Schema(description = "是否启用")
-    @NotBlank(message = "是否启用不能为空")
+    @NotNull(message = "是否启用不能为空")
     private Boolean enabled;
 }

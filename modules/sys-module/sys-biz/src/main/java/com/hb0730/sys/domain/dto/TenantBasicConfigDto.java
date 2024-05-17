@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import com.hb0730.common.api.domain.BaseDto;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
@@ -28,6 +29,6 @@ public class TenantBasicConfigDto extends BaseDto {
      */
     @JsonFormat(pattern = "yyyy-MM-dd", timezone = "GMT+8")
     @Schema(description = "截止使用时间")
-    @NotBlank(message = "截止使用时间不能为空")
+    @NotNull(message = "截止使用时间不能为空")
     private Date usedEndTime;
 }
