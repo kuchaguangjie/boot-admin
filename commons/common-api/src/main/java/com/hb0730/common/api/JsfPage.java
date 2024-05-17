@@ -95,7 +95,7 @@ public class JsfPage<T> implements Serializable {
     }
 
     public JsfPage<T> setSize(long size) {
-        this.current = current;
+        this.size = size;
         return this;
     }
 

@@ -98,6 +98,12 @@ public class QueryHelper {
      * @return Pageable
      */
     public static <T extends BaseQuery> Pageable toPage(T query) {
+        int current = query.getCurrent();
+        int size = query.getSize();
+        if (current <= 0 || size <= 0) {
+            throw new QueryException("分页参数错误, 页码和每页数量必须大于0");
+        }
+
         PageRequest pageRequest = PageRequest.of(
                 query.getCurrent() - 1,
                 query.getSize()
