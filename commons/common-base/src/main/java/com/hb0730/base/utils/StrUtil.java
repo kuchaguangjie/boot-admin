@@ -10,6 +10,25 @@ import java.util.concurrent.Callable;
  * @date 2024/3/22
  */
 public class StrUtil extends cn.hutool.core.util.StrUtil {
+
+
+    /**
+     * 大写数字下划线组成转为小写
+     */
+    public static boolean isCapitalMode(String str) {
+        return CharSequenceUtil.isNotBlank(str) && str.matches("^[A-Z0-9_]+$");
+    }
+
+    /**
+     * 是否混合模式
+     *
+     * @param str 字符串
+     * @return 是否混合模式
+     */
+    public static boolean isMixedMode(String str) {
+        return CharSequenceUtil.isNotBlank(str) && str.matches(".*[a-zA-Z]+.*");
+    }
+
     /**
      * 获取字符串
      *
