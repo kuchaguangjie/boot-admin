@@ -1,5 +1,6 @@
 package com.hb0730.code.generator.core.output.impl;
 
+import com.hb0730.code.generator.core.config.strategy.IStrategy;
 import com.hb0730.code.generator.core.engine.AbstractTemplateEngine;
 import com.hb0730.code.generator.core.enums.OutputFile;
 import com.hb0730.code.generator.core.output.AbstractOutput;
@@ -20,38 +21,27 @@ public class EntityOutput extends AbstractOutput {
         this.engine = engine;
     }
 
+    @Override
+    protected OutputFile getOutputFile() {
+        return OutputFile.entity;
+    }
 
     @Override
-    protected File getFile(String entityName) {
-        String filename =
-                this.engine
-                        .getConfigBuilder()
-                        .getStrategyConfig()
-                        .getEntityStrategy()
-                        .getConverterFileName()
-                        .converter(entityName);
-        String pathInfo = getPathInfo(OutputFile.entity);
-        String file = pathInfo + File.separator + filename + ".java";
-        return this.engine.getConfigBuilder().getStrategyConfig().getOutputFile().createFile(file, OutputFile.entity);
+    protected String getFilePath(String entityName) {
+        String filename = this.getStrategyConfig().getConverterFileName().converter(entityName);
+        return getPathInfo(OutputFile.entity) + File.separator + filename + ".java";
     }
 
     @Override
     protected String getTemplatePath() {
-        return engine.templateFilePath(
-                engine.getConfigBuilder()
-                        .getStrategyConfig()
-                        .getEntityStrategy()
-                        .getJavaTemplate()
-        );
+        return engine.templateFilePath(getStrategyConfig().getJavaTemplate());
     }
 
     @Override
-    protected boolean isFileOverride() {
-        return this.engine.getConfigBuilder().getStrategyConfig().getEntityStrategy().isFileOverride();
-    }
-
-    @Override
-    protected boolean isGenerate() {
-        return true;
+    protected IStrategy getStrategyConfig() {
+        return engine
+                .getConfigBuilder()
+                .getStrategyConfig()
+                .getEntityStrategy();
     }
 }

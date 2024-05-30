@@ -1,6 +1,6 @@
 package com.hb0730.code.generator.core.output;
 
-import com.hb0730.code.generator.core.config.StrategyConfig;
+import com.hb0730.code.generator.core.config.strategy.IStrategy;
 import com.hb0730.code.generator.core.engine.AbstractTemplateEngine;
 import com.hb0730.code.generator.core.enums.OutputFile;
 import com.hb0730.code.generator.core.po.TableInfo;
@@ -11,7 +11,6 @@ import lombok.extern.slf4j.Slf4j;
 
 import java.io.File;
 import java.util.Map;
-import java.util.Set;
 
 /**
  * @author <a href="mailto:huangbing0730@gmail">hb0730</a>
@@ -36,12 +35,19 @@ public abstract class AbstractOutput implements Output {
     }
 
     /**
-     * 获取需要生成的文件
+     * 获取输出文件类型
+     *
+     * @return 输出文件类型
+     */
+    protected abstract OutputFile getOutputFile();
+
+    /**
+     * 获取文件路径
      *
      * @param entityName 实体名称
-     * @return .
+     * @return 文件路径
      */
-    protected abstract File getFile(String entityName);
+    protected abstract String getFilePath(String entityName);
 
     /**
      * 获取模板路径
@@ -51,18 +57,11 @@ public abstract class AbstractOutput implements Output {
     protected abstract String getTemplatePath();
 
     /**
-     * 是否覆盖文件
+     * 获取策略配置
      *
-     * @return 是否覆盖文件
+     * @return 策略配置
      */
-    protected abstract boolean isFileOverride();
-
-    /**
-     * 是否生成
-     *
-     * @return 是否生成
-     */
-    protected abstract boolean isGenerate();
+    protected abstract IStrategy getStrategyConfig();
 
     /**
      * 是否跳过生成
@@ -70,39 +69,50 @@ public abstract class AbstractOutput implements Output {
      * @param tableInfo .
      */
     protected boolean isSkip(TableInfo tableInfo) {
-        StrategyConfig strategyConfig = this.engine.getConfigBuilder().getStrategyConfig();
-        Set<String> excludeTable = strategyConfig.getExcludeTable();
-        return excludeTable.contains(tableInfo.getName());
+
+        //是否排除表
+        boolean excludeTable = this.engine
+                .getConfigBuilder()
+                .getStrategyConfig()
+                .matchExcludeTable(tableInfo.getName());
+        //是否包含表
+        boolean includeTable = this.engine
+                .getConfigBuilder()
+                .getStrategyConfig()
+                .matchTable(
+                        tableInfo.getName(),
+                        this.engine
+                                .getConfigBuilder().
+                                getStrategyConfig()
+                                .getIncludeTable()
+                );
+        return excludeTable || (!includeTable && !this.engine
+                .getConfigBuilder()
+                .getStrategyConfig()
+                .getIncludeTable().isEmpty());
     }
 
     @Override
     public void outputFile(@Nonnull TableInfo tableInfo, Map<String, Object> dataMap) {
-        if (!isGenerate()) {
-            log.debug("不生成[{}]的代码！！！", tableInfo.getName());
-            return;
-        }
-        if (isSkip(tableInfo)) {
-            log.debug("跳过表[{}]的生成！！！", tableInfo.getName());
+        boolean generate = isGenerate(tableInfo);
+        if (!generate) {
             return;
         }
         Map<String, Object> templateData = dataMap;
         if (null == templateData) {
             templateData = getTemplateData(tableInfo);
         }
-        File file = getFile(tableInfo.getEntityName());
+        String filePath = getFilePath(tableInfo.getEntityName());
+        File file = getFile(filePath);
         String templatePath = getTemplatePath();
-        boolean fileOverride = isFileOverride();
+        boolean fileOverride = getStrategyConfig().isFileOverride();
         outputFile(file, templateData, templatePath, fileOverride);
     }
 
     @Override
     public String outputString(@Nonnull TableInfo tableInfo, @Nullable Map<String, Object> dataMap) {
-        if (!isGenerate()) {
-            log.debug("不生成[{}]的代码！！！", tableInfo.getName());
-            return "";
-        }
-        if (isSkip(tableInfo)) {
-            log.debug("跳过表[{}]的生成！！！", tableInfo.getName());
+        boolean generate = isGenerate(tableInfo);
+        if (!generate) {
             return "";
         }
         Map<String, Object> templateData = dataMap;
@@ -116,6 +126,20 @@ public abstract class AbstractOutput implements Output {
             log.error("模板[{}]渲染失败！！！", templatePath, e);
             throw new RuntimeException(e);
         }
+    }
+
+    /**
+     * 获取文件
+     *
+     * @param filePath 文件路径
+     * @return 文件
+     */
+    protected File getFile(String filePath) {
+        return this.engine
+                .getConfigBuilder()
+                .getStrategyConfig()
+                .getOutputFile()
+                .createFile(filePath, getOutputFile());
     }
 
     /**
@@ -169,5 +193,23 @@ public abstract class AbstractOutput implements Output {
             log.warn("文件[{}]已存在，且未开启文件覆盖配置，需要开启配置可到策略配置中设置！！！", file.getName());
         }
         return !file.exists() || fileOverride;
+    }
+
+    /**
+     * 是否生成
+     *
+     * @param tableInfo 表信息
+     * @return 是否生成
+     */
+    protected boolean isGenerate(TableInfo tableInfo) {
+        if (!getStrategyConfig().isGenerate()) {
+            log.debug("不生成[{}]的代码！！！", tableInfo.getName());
+            return false;
+        }
+        if (isSkip(tableInfo)) {
+            log.debug("跳过表[{}]的生成！！！", tableInfo.getName());
+            return false;
+        }
+        return true;
     }
 }

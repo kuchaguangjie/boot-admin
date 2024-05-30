@@ -7,6 +7,7 @@ import com.hb0730.code.generator.core.config.strategy.DtoStrategy;
 import com.hb0730.code.generator.core.config.strategy.EntityStrategy;
 import com.hb0730.code.generator.core.config.strategy.QueryStrategy;
 import com.hb0730.code.generator.core.config.strategy.RepositoryStrategy;
+import com.hb0730.code.generator.core.config.strategy.ServiceImplStrategy;
 import com.hb0730.code.generator.core.config.strategy.ServiceStrategy;
 import com.hb0730.code.generator.core.handler.IOutputFile;
 import jakarta.validation.constraints.NotNull;
@@ -57,6 +58,11 @@ public class StrategyConfig {
      * result: user_f -> user, user_field -> user
      */
     private final Set<String> fieldSuffix = new HashSet<>();
+
+    /**
+     * 包含表
+     */
+    private final Set<String> includeTable = new HashSet<>();
     /**
      * 排除表
      */
@@ -77,6 +83,9 @@ public class StrategyConfig {
 
     private ServiceStrategy serviceStrategy;
     private final ServiceStrategy.Builder serviceStrategyBuilder = new ServiceStrategy.Builder(this);
+
+    private ServiceImplStrategy serviceImplStrategy;
+    private final ServiceImplStrategy.Builder serviceImplStrategyBuilder = new ServiceImplStrategy.Builder(this);
 
     private ControllerStrategy controllerStrategy;
     private final ControllerStrategy.Builder controllerStrategyBuilder = new ControllerStrategy.Builder(this);
@@ -100,7 +109,7 @@ public class StrategyConfig {
      * @param machTable 匹配的表名
      * @return 是否匹配
      */
-    private boolean matchTable(String tableName, Set<String> machTable) {
+    public boolean matchTable(String tableName, Set<String> machTable) {
         return machTable.stream().anyMatch(t -> tableNameMatches(t, tableName));
     }
 
@@ -176,6 +185,18 @@ public class StrategyConfig {
     }
 
     /**
+     * 获取serviceImpl策略
+     *
+     * @return {@link ServiceImplStrategy}
+     */
+    public ServiceImplStrategy getServiceImplStrategy() {
+        if (serviceImplStrategy == null) {
+            serviceImplStrategy = serviceImplStrategyBuilder.get();
+        }
+        return serviceImplStrategy;
+    }
+
+    /**
      * 获取controller策略
      *
      * @return {@link ControllerStrategy}
@@ -185,6 +206,17 @@ public class StrategyConfig {
             controllerStrategy = controllerStrategyBuilder.get();
         }
         return controllerStrategy;
+    }
+
+    /**
+     * 验证
+     */
+    public void validate() {
+        boolean isInclude = !includeTable.isEmpty();
+        boolean isExclude = !excludeTable.isEmpty();
+        if (isInclude && isExclude) {
+            throw new IllegalArgumentException("<strategy> 标签中 <include> 与 <exclude> 只能配置一项！");
+        }
     }
 
 
@@ -287,7 +319,8 @@ public class StrategyConfig {
 
         @Override
         public StrategyConfig build() {
-            return strategyConfig;
+            this.strategyConfig.validate();
+            return this.strategyConfig;
         }
     }
 }

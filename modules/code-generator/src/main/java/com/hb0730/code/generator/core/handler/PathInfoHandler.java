@@ -7,6 +7,7 @@ import com.hb0730.code.generator.core.config.PackageConfig;
 import com.hb0730.code.generator.core.config.StrategyConfig;
 import com.hb0730.code.generator.core.config.strategy.EntityStrategy;
 import com.hb0730.code.generator.core.config.strategy.RepositoryStrategy;
+import com.hb0730.code.generator.core.config.strategy.ServiceImplStrategy;
 import com.hb0730.code.generator.core.config.strategy.ServiceStrategy;
 import com.hb0730.code.generator.core.enums.ConstVal;
 import com.hb0730.code.generator.core.enums.OutputFile;
@@ -65,7 +66,9 @@ public class PathInfoHandler {
         //service
         ServiceStrategy serviceStrategy = strategyConfig.getServiceStrategy();
         putPathInfo(serviceStrategy.getJavaTemplate(), OutputFile.service, ConstVal.PACKAGE_SERVICE);
-        putPathInfo(serviceStrategy.getImplJavaTemplate(), OutputFile.serviceImpl, ConstVal.PACKAGE_SERVICE_IMPL);
+        //serviceImpl
+        ServiceImplStrategy serviceImplStrategy = strategyConfig.getServiceImplStrategy();
+        putPathInfo(serviceImplStrategy.getJavaTemplate(), OutputFile.serviceImpl, ConstVal.PACKAGE_SERVICE_IMPL);
 
         //controller
         putPathInfo(strategyConfig.getControllerStrategy().getJavaTemplate(), OutputFile.controller, ConstVal.PACKAGE_CONTROLLER);

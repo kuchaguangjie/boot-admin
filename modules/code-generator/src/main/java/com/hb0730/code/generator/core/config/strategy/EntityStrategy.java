@@ -30,7 +30,7 @@ import java.util.Set;
  * @date 2024/5/28
  */
 @Getter
-public class EntityStrategy implements ITemplate {
+public class EntityStrategy implements ITemplate, IStrategy {
     /**
      * Entity 模板
      */

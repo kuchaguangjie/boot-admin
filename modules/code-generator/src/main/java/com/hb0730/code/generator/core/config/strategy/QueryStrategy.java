@@ -18,7 +18,7 @@ import java.util.Map;
  * @date 2024/5/29
  */
 @Getter
-public class QueryStrategy implements ITemplate {
+public class QueryStrategy implements ITemplate, IStrategy {
     /**
      * 模板路径
      */

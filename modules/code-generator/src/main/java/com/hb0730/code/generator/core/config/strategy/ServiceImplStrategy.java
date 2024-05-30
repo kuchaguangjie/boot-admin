@@ -12,32 +12,25 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * service 策略
- *
  * @author <a href="mailto:huangbing0730@gmail">hb0730</a>
- * @date 2024/5/28
+ * @date 2024/5/30
  */
 @Getter
-public class ServiceStrategy implements ITemplate, IStrategy {
+public class ServiceImplStrategy implements ITemplate, IStrategy {
     /**
      * 模板路径
      */
-    private String javaTemplate = ConstVal.SERVICE_TEMPLATE;
+    private String javaTemplate = ConstVal.SERVICE_IMPL_TEMPLATE;
 
     /**
-     * 父类class,带包名
+     * 父类class,不带包名
      */
-    private String superClass;
-
+    private String superClass = ConstVal.SUPER_SERVICE_IMPL_CLASS;
     /**
-     * 是否生成service
+     * 转换输出ServiceImpl文件名称
      */
-    private boolean generate = true;
+    private ConverterFileName converterFileName = (entityName -> entityName + ConstVal.SERVICE_IMPL);
 
-    /**
-     * 转换输出Service文件名称
-     */
-    private ConverterFileName converterFileName = (entityName -> "I" + entityName + ConstVal.SERVICE);
     /**
      * 是否覆盖已有文件
      */
@@ -46,35 +39,33 @@ public class ServiceStrategy implements ITemplate, IStrategy {
     @Override
     public Map<String, Object> renderData(TableInfo tableInfo) {
         Map<String, Object> data = new HashMap<>();
-        data.put("superServiceClassPackage", superClass);
-        data.put("superServiceClass", ClassUtil.getSimpleName(superClass));
-        data.put("generateService", generate);
+        data.put("superServiceImplClassPackage", superClass);
+        data.put("superServiceImplClass", ClassUtil.getSimpleName(superClass));
         return data;
     }
 
     public static class Builder extends BaseBuilder {
-        private final ServiceStrategy serviceStrategy = new ServiceStrategy();
+        private final ServiceImplStrategy serviceImplStrategy = new ServiceImplStrategy();
 
         public Builder(StrategyConfig strategyConfig) {
             super(strategyConfig);
         }
 
         /**
-         * 设置模板路径
+         * 模板路径
          *
          * @param javaTemplate 模板路径
          * @return this
          */
         public Builder javaTemplate(String javaTemplate) {
-            this.serviceStrategy.javaTemplate = javaTemplate;
+            serviceImplStrategy.javaTemplate = javaTemplate;
             return this;
         }
 
-
         /**
-         * 设置父类
+         * 父类class
          *
-         * @param superClass 父类
+         * @param superClass 父类class
          * @return this
          */
         public Builder superClass(Class<?> superClass) {
@@ -82,79 +73,58 @@ public class ServiceStrategy implements ITemplate, IStrategy {
         }
 
         /**
-         * 设置父类
+         * 父类class
          *
-         * @param superClass 父类
+         * @param superClass 父类class
          * @return this
          */
         public Builder superClass(String superClass) {
-            this.serviceStrategy.superClass = superClass;
+            serviceImplStrategy.superClass = superClass;
             return this;
         }
 
         /**
-         * 设置转换输出Service文件名称
+         * 转换输出ServiceImpl文件名称
          *
-         * @param converterFileName 转换输出Service文件名称
+         * @param converterFileName 转换输出ServiceImpl文件名称
          * @return this
          */
         public Builder converterFileName(ConverterFileName converterFileName) {
-            this.serviceStrategy.converterFileName = converterFileName;
+            serviceImplStrategy.converterFileName = converterFileName;
             return this;
         }
 
         /**
-         * 允许覆盖文件
+         * 覆盖已有文件
          *
          * @return this
          */
         public Builder enableFileOverride() {
-            this.serviceStrategy.fileOverride = true;
-            return this;
+            return fileOverride(true);
         }
 
         /**
-         * 禁止覆盖文件
+         * 不覆盖已有文件
          *
          * @return this
          */
         public Builder disableFileOverride() {
-            this.serviceStrategy.fileOverride = false;
+            return fileOverride(false);
+        }
+
+        /**
+         * 是否覆盖已有文件
+         *
+         * @param fileOverride 是否覆盖已有文件
+         * @return this
+         */
+        public Builder fileOverride(boolean fileOverride) {
+            serviceImplStrategy.fileOverride = fileOverride;
             return this;
         }
 
-        /**
-         * 允许生成
-         *
-         * @return this
-         */
-        public Builder enableGenerate() {
-            return generate(true);
-        }
-
-        /**
-         * 禁止生成
-         *
-         * @return this
-         */
-        public Builder disableGenerate() {
-            return generate(false);
-        }
-
-        /**
-         * 是否生成
-         *
-         * @param generate .
-         * @return .
-         */
-        public Builder generate(boolean generate) {
-            this.serviceStrategy.generate = generate;
-            return this;
-        }
-
-
-        public ServiceStrategy get() {
-            return this.serviceStrategy;
+        public ServiceImplStrategy get() {
+            return serviceImplStrategy;
         }
     }
 }

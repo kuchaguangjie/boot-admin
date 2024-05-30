@@ -9,7 +9,7 @@ import ${importPackage};
 import lombok.Getter;
 import lombok.Setter;
 <#if dtoChainModel>
- import lombok.experimental.Accessors;
+import lombok.experimental.Accessors;
 </#if>
 
 /**

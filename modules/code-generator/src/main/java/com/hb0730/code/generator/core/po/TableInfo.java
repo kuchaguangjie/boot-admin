@@ -157,8 +157,8 @@ public class TableInfo {
      */
     public void processTable() {
         this.repositoryName = strategyConfig.getRepositoryStrategy().getConverterFileName().converter(this.entityName);
-        this.serviceName = strategyConfig.getServiceStrategy().getConverterServiceFileName().converter(this.entityName);
-        this.serviceImplName = strategyConfig.getServiceStrategy().getConverterServiceImplFileName().converter(this.entityName);
+        this.serviceName = strategyConfig.getServiceStrategy().getConverterFileName().converter(this.entityName);
+        this.serviceImplName = strategyConfig.getServiceImplStrategy().getConverterFileName().converter(this.entityName);
         this.controllerName = strategyConfig.getControllerStrategy().getConverterFileName().converter(this.entityName);
         this.dtoName = strategyConfig.getDtoStrategy().getConverterFileName().converter(this.entityName);
         this.queryName = strategyConfig.getQueryStrategy().getConverterFileName().converter(this.entityName);

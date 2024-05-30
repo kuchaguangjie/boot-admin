@@ -41,9 +41,9 @@ public class ${table.queryName} {
      */
     </#if>
     <#if field.queryType == 'eq'>
-     @Equals
+    @Equals
     <#elseif field.queryType == 'like'>
-     @Like
+    @Like
     </#if>
     <#if springdoc>
     @Schema(description = "${field.comment}")

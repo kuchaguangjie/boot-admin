@@ -18,7 +18,7 @@ import java.util.Map;
  * @date 2024/5/28
  */
 @Getter
-public class RepositoryStrategy implements ITemplate {
+public class RepositoryStrategy implements ITemplate, IStrategy {
     /**
      * 自定义继承的Repository类全称，带包名
      */

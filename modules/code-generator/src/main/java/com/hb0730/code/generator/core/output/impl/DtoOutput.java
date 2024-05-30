@@ -1,5 +1,6 @@
 package com.hb0730.code.generator.core.output.impl;
 
+import com.hb0730.code.generator.core.config.strategy.IStrategy;
 import com.hb0730.code.generator.core.engine.AbstractTemplateEngine;
 import com.hb0730.code.generator.core.enums.OutputFile;
 import com.hb0730.code.generator.core.output.AbstractOutput;
@@ -19,37 +20,26 @@ public class DtoOutput extends AbstractOutput {
     }
 
     @Override
-    protected File getFile(String entityName) {
-        String filename =
-                this.engine
-                        .getConfigBuilder()
-                        .getStrategyConfig()
-                        .getDtoStrategy()
-                        .getConverterFileName()
-                        .converter(entityName);
-        String pathInfo = getPathInfo(OutputFile.dto);
-        String file = pathInfo + File.separator + filename + ".java";
-        return this.engine.getConfigBuilder().getStrategyConfig().getOutputFile().createFile(file, OutputFile.dto);
+    protected OutputFile getOutputFile() {
+        return OutputFile.dto;
+    }
+
+    @Override
+    protected String getFilePath(String entityName) {
+        String filename = this.getStrategyConfig().getConverterFileName().converter(entityName);
+        return getPathInfo(OutputFile.dto) + File.separator + filename + ".java";
     }
 
     @Override
     protected String getTemplatePath() {
-        return this.engine.templateFilePath(
-                this.engine
-                        .getConfigBuilder()
-                        .getStrategyConfig()
-                        .getDtoStrategy()
-                        .getJavaTemplate()
-        );
+        return this.engine.templateFilePath(getStrategyConfig().getJavaTemplate());
     }
 
     @Override
-    protected boolean isFileOverride() {
-        return this.engine.getConfigBuilder().getStrategyConfig().getDtoStrategy().isFileOverride();
-    }
-
-    @Override
-    protected boolean isGenerate() {
-        return true;
+    protected IStrategy getStrategyConfig() {
+        return this.engine
+                .getConfigBuilder()
+                .getStrategyConfig()
+                .getDtoStrategy();
     }
 }

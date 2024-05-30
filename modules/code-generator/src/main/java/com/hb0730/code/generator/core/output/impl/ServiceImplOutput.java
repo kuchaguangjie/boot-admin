@@ -1,5 +1,6 @@
 package com.hb0730.code.generator.core.output.impl;
 
+import com.hb0730.code.generator.core.config.strategy.IStrategy;
 import com.hb0730.code.generator.core.engine.AbstractTemplateEngine;
 import com.hb0730.code.generator.core.enums.OutputFile;
 import com.hb0730.code.generator.core.output.AbstractOutput;
@@ -19,36 +20,28 @@ public class ServiceImplOutput extends AbstractOutput {
     }
 
     @Override
-    protected File getFile(String entityName) {
-        String filename =
-                this.engine
-                        .getConfigBuilder()
-                        .getStrategyConfig()
-                        .getServiceStrategy()
-                        .getConverterServiceImplFileName()
-                        .converter(entityName);
-        String pathInfo = getPathInfo(OutputFile.serviceImpl);
-        String file = pathInfo + File.separator + filename + ".java";
-        return this.engine.getConfigBuilder().getStrategyConfig().getOutputFile().createFile(file, OutputFile.serviceImpl);
+    protected OutputFile getOutputFile() {
+        return OutputFile.serviceImpl;
+    }
+
+    @Override
+    protected String getFilePath(String entityName) {
+        String filename = getStrategyConfig().getConverterFileName().converter(entityName);
+        return getPathInfo(getOutputFile()) + File.separator + filename + ".java";
     }
 
     @Override
     protected String getTemplatePath() {
         return engine.templateFilePath(
-                engine.getConfigBuilder()
-                        .getStrategyConfig()
-                        .getServiceStrategy()
-                        .getImplJavaTemplate()
+                getStrategyConfig().getJavaTemplate()
         );
     }
 
     @Override
-    protected boolean isFileOverride() {
-        return engine.getConfigBuilder().getStrategyConfig().getServiceStrategy().isFileOverride();
-    }
-
-    @Override
-    protected boolean isGenerate() {
-        return engine.getConfigBuilder().getStrategyConfig().getServiceStrategy().isGenerateServiceImpl();
+    protected IStrategy getStrategyConfig() {
+        return engine
+                .getConfigBuilder()
+                .getStrategyConfig()
+                .getServiceImplStrategy();
     }
 }

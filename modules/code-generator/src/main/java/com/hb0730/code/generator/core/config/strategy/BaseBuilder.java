@@ -7,7 +7,7 @@ import com.hb0730.code.generator.core.config.StrategyConfig;
  * @author <a href="mailto:huangbing0730@gmail">hb0730</a>
  * @date 2024/5/28
  */
-public class BaseBuilder implements IBuilder<StrategyConfig> {
+public abstract class BaseBuilder implements IBuilder<StrategyConfig> {
     private final StrategyConfig strategyConfig;
 
     public BaseBuilder(StrategyConfig strategyConfig) {
@@ -52,6 +52,15 @@ public class BaseBuilder implements IBuilder<StrategyConfig> {
     }
 
     /**
+     * serviceImpl 策略
+     *
+     * @return serviceImpl 策略
+     */
+    public ServiceImplStrategy.Builder serviceImplStrategyBuilder() {
+        return this.strategyConfig.getServiceImplStrategyBuilder();
+    }
+
+    /**
      * repository 策略
      *
      * @return repository 策略
@@ -71,6 +80,7 @@ public class BaseBuilder implements IBuilder<StrategyConfig> {
 
     @Override
     public StrategyConfig build() {
-        return strategyConfig;
+        this.strategyConfig.validate();
+        return this.strategyConfig;
     }
 }

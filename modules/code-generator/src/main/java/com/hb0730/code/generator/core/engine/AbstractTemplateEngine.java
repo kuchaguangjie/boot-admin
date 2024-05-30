@@ -77,6 +77,7 @@ public abstract class AbstractTemplateEngine {
         data.putAll(strategyConfig.getEntityStrategy().renderData(tableInfo));
         data.putAll(strategyConfig.getControllerStrategy().renderData(tableInfo));
         data.putAll(strategyConfig.getServiceStrategy().renderData(tableInfo));
+        data.putAll(strategyConfig.getServiceImplStrategy().renderData(tableInfo));
         data.putAll(strategyConfig.getRepositoryStrategy().renderData(tableInfo));
         data.putAll(strategyConfig.getDtoStrategy().renderData(tableInfo));
         data.putAll(strategyConfig.getQueryStrategy().renderData(tableInfo));

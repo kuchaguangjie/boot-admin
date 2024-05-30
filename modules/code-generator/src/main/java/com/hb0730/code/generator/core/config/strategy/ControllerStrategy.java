@@ -16,7 +16,7 @@ import java.util.Map;
  * @date 2024/5/28
  */
 @Getter
-public class ControllerStrategy implements ITemplate {
+public class ControllerStrategy implements ITemplate, IStrategy {
     /**
      * 模板路径
      */
