@@ -289,6 +289,27 @@ public class StrategyConfig {
             return this;
         }
 
+        /**
+         * 增加包含表
+         *
+         * @param include 包含表
+         * @return this
+         */
+        public Builder addIncludeTable(@NotNull String... include) {
+            return addIncludeTable(Arrays.asList(include));
+        }
+
+        /**
+         * 增加包含表
+         *
+         * @param includeList 包含表
+         * @return this
+         */
+        public Builder addIncludeTable(@NotNull List<String> includeList) {
+            this.strategyConfig.includeTable.addAll(includeList);
+            return this;
+        }
+
 
         /**
          * 增加排除表
@@ -296,11 +317,11 @@ public class StrategyConfig {
          * @param exclude 排除表
          * @return this
          */
-        public Builder addExclude(@NotNull String... exclude) {
-            return addExclude(Arrays.asList(exclude));
+        public Builder addExcludeTable(@NotNull String... exclude) {
+            return addExcludeTable(Arrays.asList(exclude));
         }
 
-        public Builder addExclude(@NotNull List<String> excludeList) {
+        public Builder addExcludeTable(@NotNull List<String> excludeList) {
             this.strategyConfig.excludeTable.addAll(excludeList);
             return this;
         }

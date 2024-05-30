@@ -1,10 +1,6 @@
-package com.hb0730.code.generator.core.handler;
+package com.hb0730.code.generator.core.config;
 
 import com.hb0730.base.utils.StrUtil;
-import com.hb0730.code.generator.core.config.ConfigBuilder;
-import com.hb0730.code.generator.core.config.GlobalConfig;
-import com.hb0730.code.generator.core.config.PackageConfig;
-import com.hb0730.code.generator.core.config.StrategyConfig;
 import com.hb0730.code.generator.core.config.strategy.EntityStrategy;
 import com.hb0730.code.generator.core.config.strategy.RepositoryStrategy;
 import com.hb0730.code.generator.core.config.strategy.ServiceImplStrategy;

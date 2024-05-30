@@ -1,7 +1,6 @@
 package com.hb0730.code.generator.core.config;
 
 import com.hb0730.code.generator.core.enums.OutputFile;
-import com.hb0730.code.generator.core.handler.PathInfoHandler;
 import jakarta.annotation.Nullable;
 import lombok.Getter;
 
