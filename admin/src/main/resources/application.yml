@@ -4,6 +4,8 @@ server:
     context-path: /api/v6
 
 logging:
+  file:
+    path: logs/
   level:
     root: info
     com.hb0730: debug

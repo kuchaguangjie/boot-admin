@@ -151,3 +151,8 @@ docker/data
 **/application-hb0730.yml.bak
 **/application-hb0730.yml.bak.*
 **/application-*-hb0730.yml
+
+# linux tmp
+*.swp
+*~
+
